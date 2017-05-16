@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <body>
+        <ui:composition template="./templates/template.xhtml">
+            <ui:define name="content">
+                <h3>申請作成</h3>
+                <p:dataList value="#{makeBean.entries}" var="entry" varStatus="stat" id="entries" type="none">
+                    <div style="padding:5px;">
+                        <ui:fragment rendered="#{not entry.deleted}">
+                            利用日：
+                            <h:inputText id="used_date" value="#{entry.usedDate}" 
+                                requiredMessage="#{stat.index+1}行目の利用日を入力してください。"
+                                converterMessage="#{stat.index+1}行目の利用日をyyyy/mm/ddの形式で入力してください。">
+                                <f:validateRequired />
+                                <f:convertDateTime pattern="yyyy/MM/dd" locale="ja" />
+                            </h:inputText>
+                            <br/>
+                            作業コード：
+                            <h:selectOneMenu id="order_id" value="#{entry.orderId}">
+                                <f:selectItems value="#{makeBean.orderItems}" />
+                            </h:selectOneMenu>
+                            <br/>
+                            出張場所：
+                            <h:inputText id="place" value="#{entry.place}" maxlength="40"
+                                requiredMessage="#{stat.index+1}行目の出張場所を入力してください。">
+                                <f:validateRequired />
+                            </h:inputText>
+                            <br/>
+                            出張目的：
+                            <h:inputText id="purpose" value="#{entry.purpose}" maxlength="40"
+                                requiredMessage="#{stat.index+1}行目の出張目的を入力してください。">
+                                <f:validateRequired />
+                            </h:inputText>
+                            <br/>
+                            交通手段：
+                            <h:selectOneMenu id="means" value="#{entry.meansId}">
+                                <f:selectItems value="#{makeBean.meansItems}" />
+                            </h:selectOneMenu>
+                            <br/>
+                            区間(From)：
+                            <h:inputText id="section_from" value="#{entry.sectionFrom}" maxlength="40"
+                                requiredMessage="#{stat.index+1}行目の出発地を入力してください。">
+                                <f:validateRequired />
+                            </h:inputText>
+                            <br/>
+                            区間(To)：
+                            <h:inputText id="section_to" value="#{entry.sectionTo}" maxlength="40"
+                                requiredMessage="#{stat.index+1}行目の到着地を入力してください。">
+                                <f:validateRequired />
+                            </h:inputText>
+                            <br/>
+                            往復：
+                            <h:selectBooleanCheckbox id="is_round_trip" value="#{entry.isRoundTrip}" />
+                            <br/>
+                            片道料金：
+                            <h:inputText id="fare" value="#{entry.fare}"
+                                requiredMessage="#{stat.index+1}行目の片道料金を入力してください。"
+                                converterMessage="#{stat.index+1}行目の片道料金は1～999999の数値で入力してください。">
+                                <f:validateRequired />
+                                <f:validateLongRange minimum="1" maximum="999999" />
+                            </h:inputText>
+                            <br/>
+                            備考：
+                            <h:inputText id="memo" value="#{entry.memo}" maxlength="100" size="100">
+                            </h:inputText>
+                            <br/>
+                            <h:commandButton type="button" value="料金検索" />
+                            <h:commandButton type="submit" value="削除" action="#{makeBean.removeEntry(entry)}" immediate="true" />
+                            <hr/>
+                        </ui:fragment>
+                    </div>
+                </p:dataList>
+                <h:commandButton type="submit" value="追加" action="#{makeBean.addEntry()}" immediate="true" />
+                <h:commandButton type="submit" value="保存" action="#{makeBean.save()}" />
+                <h:commandButton type="submit" value="申請" />
+                <h:messages />
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

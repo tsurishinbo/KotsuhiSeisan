@@ -1,6 +1,5 @@
-package utils;
+package util;
 
-import business.Auth;
 import java.io.Serializable;
 import javax.inject.Inject;
 
@@ -10,7 +9,7 @@ public abstract class SuperBean implements Serializable {
 
     public String checkAuthenticated() {
         if (!auth.isAuthenticated()) {
-            return "/index.xhtml?faces-redirect=true";
+            return "index.xhtml?faces-redirect=true";
         }
         return null;
     }
@@ -20,12 +19,16 @@ public abstract class SuperBean implements Serializable {
         return "index.xhtml?faces-redirect=true";
     }
 
-    public Integer getLoginNo() {
-        return auth.getEmpNo();
+    public Integer getLoginId() {
+        return auth.getEmpId();
     }
     
     public String getLoginName() {
         return auth.getEmpName();
+    }
+
+    public Integer getBossId() {
+        return auth.getBossId();
     }
     
     public Integer getLoginManager() {

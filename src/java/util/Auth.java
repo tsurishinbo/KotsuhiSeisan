@@ -1,48 +1,39 @@
-package business;
+package util;
 
-import entity.MEmployee;
 import java.io.Serializable;
-import java.util.List;
 import javax.enterprise.context.SessionScoped;
-import javax.persistence.*;
 
 @SessionScoped
 public class Auth implements Serializable {
 
-    @PersistenceContext
-    private EntityManager em;
-    
-    private Integer empNo;
+    private Integer empId;
     private String empName;
+    private Integer bossId;
     private Integer manager;
     private boolean authenticated;
 
-    public void login(Integer empNo, String password) {
-        List<MEmployee> employees = em.createNamedQuery("MEmployee.findByIdAndPassword", MEmployee.class)
-                .setParameter("id", empNo)
-                .setParameter("password", password)
-                .getResultList();
-        if (employees.size() > 0) {
-            this.empNo = empNo;
-            this.empName = employees.get(0).getEmployeeName();
-            this.manager = employees.get(0).getManager();
-            this.authenticated = true;
-        }
+    public void login(Integer empId, String empName, Integer bossId, Integer manager) {
+        this.empId = empId;
+        this.empName = empName;
+        this.bossId = bossId;
+        this.manager = manager;
+        this.authenticated = true;
     }
 
     public void logout() {
-        this.empNo = null;
+        this.empId = null;
         this.empName = null;
+        this.bossId = null;
         this.manager = null;
         this.authenticated = false;
     }
 
-    public Integer getEmpNo() {
-        return empNo;
+    public Integer getEmpId() {
+        return empId;
     }
 
-    public void setEmpNo(Integer empNo) {
-        this.empNo = empNo;
+    public void setEmpId(Integer empId) {
+        this.empId = empId;
     }
 
     public String getEmpName() {
@@ -51,6 +42,14 @@ public class Auth implements Serializable {
 
     public void setEmpName(String empName) {
         this.empName = empName;
+    }
+
+    public Integer getBossId() {
+        return bossId;
+    }
+
+    public void setBossId(Integer bossId) {
+        this.bossId = bossId;
     }
 
     public Integer getManager() {
@@ -68,4 +67,6 @@ public class Auth implements Serializable {
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
     }
+
+    
 }

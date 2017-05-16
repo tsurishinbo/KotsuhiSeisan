@@ -10,27 +10,25 @@
         <title>交通費精算システム</title>
     </h:head>
     <h:body>
-        <h:form>
-            <div id="top">
-                <h1>交通費精算システム</h1>
+        <h:form prependId="false">
+            <div id="header">
+                <h3>交通費精算システム</h3>
                 <ui:insert name="top">
-                    <h:outputText value="#{indexBean.loginNo}" />:<h:outputText value="#{indexBean.loginName}" />
+                    <h:outputText value="#{indexBean.loginId}" />:<h:outputText value="#{indexBean.loginName}" />
                 </ui:insert>
             </div>
-            <div class="fullheight">
-                <div id="left">
-                    <ui:insert name="left">
-                        <h:panelGrid columns="1">
-                            <h:link outcome="top">申請作成</h:link>
-                            <h:link outcome="top">申請検索</h:link>
-                            <h:link outcome="top">申請承認</h:link>
-                            <h:commandLink action="#{indexBean.logout()}">ログアウト</h:commandLink> 
-                        </h:panelGrid>
-                    </ui:insert>
-                </div>
-                <div id="content">
-                    <ui:insert name="content" />
-                </div>
+            <div id="menu">
+                <ui:insert name="left">
+                    <h:link outcome="make" style="margin-right:10px;">申請作成</h:link>
+                    <h:link outcome="search" style="margin-right:10px;">申請検索</h:link>
+                    <ui:fragment rendered="#{indexBean.loginManager == 1}">
+                        <h:link outcome="top" style="margin-right:10px;">申請承認</h:link>
+                    </ui:fragment>
+                    <h:commandLink action="#{indexBean.logout()}">ログアウト</h:commandLink> 
+                </ui:insert>
+            </div>
+            <div id="content">
+                <ui:insert name="content" />
             </div>
         </h:form>
     </h:body>

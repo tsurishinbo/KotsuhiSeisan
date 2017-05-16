@@ -1,26 +1,27 @@
-#top {
-    height: 100px;
-    position: relative;
+#header {
+    height: 60px;
+    /*position: relative;*/
     background-color: #036fab;
-    color: white;
+    color: #ffffff;
     padding: 5px;
-    margin: 0px 0px 10px 0px;
+    /*margin: 0px 0px 10px 0px;*/
 }
 
-#left {
-    height: 100%;
-    float: left;
+#menu {
+    height: 20px;
     background-color: #ece3a5;
     padding: 5px;
-    width: 150px;
-}
-#content {
-    height: 100%;
-    background-color: #dddddd;
-    padding: 5px;
-    margin-left: 170px;
+    /*width: 150px;*/
 }
 
+#content {
+    /*height: 100%;*/
+    /*background-color: #dddddd;*/
+    padding: 5px;
+    /*margin-left: 170px;*/
+}
+
+/*
 .center_content {
     position: relative;
     background-color: #dddddd;
@@ -38,3 +39,4 @@
     padding: 5px;
     margin: 0px 170px 0px 170px;
 }
+*/

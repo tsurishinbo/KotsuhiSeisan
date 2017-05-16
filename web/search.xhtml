@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <body>
+        <ui:composition template="./templates/template.xhtml">
+            <ui:define name="content">
+                <h3>申請検索</h3>
+                <div>
+                    申請日：
+                    <h:inputText id="date_from" value="#{searchBean.dateFrom}"
+                        converterMessage="申請日(From)をyyyy/mm/ddの形式で入力してください。">
+                        <f:convertDateTime pattern="yyyy/MM/dd" locale="ja" />
+                    </h:inputText>
+                    ～
+                    <h:inputText id="date_to" value="#{searchBean.dateTo}"
+                        converterMessage="申請日(To)をyyyy/mm/ddの形式で入力してください。">
+                        <f:convertDateTime pattern="yyyy/MM/dd" locale="ja" />
+                    </h:inputText>
+                    <br/>
+                    申請者：
+                    <h:selectOneMenu id="apply_id" value="#{searchBean.applyId}">
+                        <f:selectItems value="#{searchBean.applyItems}" />
+                    </h:selectOneMenu>
+                    <br/>
+                    承認者：
+                    <h:selectOneMenu id="approve_id" value="#{searchBean.approveId}">
+                        <f:selectItems value="#{searchBean.approveItems}" />
+                    </h:selectOneMenu>
+                    <br/>
+                    ステータス：
+                    <h:selectOneRadio id="status" value="#{searchBean.status}">
+                        <f:selectItem itemValue="0" itemLabel="すべて" />
+                        <f:selectItem itemValue="1" itemLabel="未承認" />
+                        <f:selectItem itemValue="2" itemLabel="承認待ち" />
+                        <f:selectItem itemValue="3" itemLabel="承認済" />
+                        <f:selectItem itemValue="4" itemLabel="差戻し" />
+                    </h:selectOneRadio>
+                    <br/>
+                </div>
+                <h:commandButton action="#{searchBean.search()}" value="検索" />
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
+

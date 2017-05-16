@@ -8,14 +8,19 @@ package entity;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -37,7 +42,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "TApplication.findByApplyDate", query = "SELECT t FROM TApplication t WHERE t.applyDate = :applyDate")
     , @NamedQuery(name = "TApplication.findByApproveId", query = "SELECT t FROM TApplication t WHERE t.approveId = :approveId")
     , @NamedQuery(name = "TApplication.findByApproveDate", query = "SELECT t FROM TApplication t WHERE t.approveDate = :approveDate")
-    , @NamedQuery(name = "TApplication.findByTotalFare", query = "SELECT t FROM TApplication t WHERE t.totalFare = :totalFare")})
+    , @NamedQuery(name = "TApplication.findByTotalFare", query = "SELECT t FROM TApplication t WHERE t.totalFare = :totalFare")
+    , @NamedQuery(name = "TApplication.getRejectCount", query = "SELECT COUNT(t) FROM TApplication t WHERE t.applyId = :applyId and t.status = 4")
+    , @NamedQuery(name = "TApplication.getPendingCount", query = "SELECT COUNT(t) FROM TApplication t WHERE t.approveId = :approveId and t.status = 2")})
 public class TApplication implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -65,7 +72,16 @@ public class TApplication implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "total_fare")
-    private BigInteger totalFare;
+    private Long totalFare;
+    @OneToOne
+    @JoinColumn(name = "apply_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private MEmployee applyEmployee;
+    @OneToOne
+    @JoinColumn(name = "approve_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private MEmployee approveEmployee;
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "application_id", referencedColumnName = "id", insertable = true, updatable = true)
+    private List<TLine> lines;
 
     public TApplication() {
     }
@@ -74,7 +90,7 @@ public class TApplication implements Serializable {
         this.id = id;
     }
 
-    public TApplication(Integer id, int status, int applyId, BigInteger totalFare) {
+    public TApplication(Integer id, int status, int applyId, Long totalFare) {
         this.id = id;
         this.status = status;
         this.applyId = applyId;
@@ -129,14 +145,38 @@ public class TApplication implements Serializable {
         this.approveDate = approveDate;
     }
 
-    public BigInteger getTotalFare() {
+    public Long getTotalFare() {
         return totalFare;
     }
 
-    public void setTotalFare(BigInteger totalFare) {
+    public void setTotalFare(Long totalFare) {
         this.totalFare = totalFare;
     }
 
+    public MEmployee getApplyEmployee() {
+        return applyEmployee;
+    }
+
+    public void setApplyEmployee(MEmployee applyEmployee) {
+        this.applyEmployee = applyEmployee;
+    }
+
+    public MEmployee getApproveEmployee() {
+        return approveEmployee;
+    }
+
+    public void setApproveEmployee(MEmployee approveEmployee) {
+        this.approveEmployee = approveEmployee;
+    }
+
+    public List<TLine> getLines() {
+        return lines;
+    }
+
+    public void setLines(List<TLine> lines) {
+        this.lines = lines;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

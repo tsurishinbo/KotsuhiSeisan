@@ -1,18 +1,31 @@
-package backingbeabs;
+package bean;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
-import utils.*;
+import db.*;
+import entity.*;
+import util.*;
 
 @Named
 @RequestScoped
 public class IndexBean extends SuperBean {
+    
     private Integer empNo;
     private String password;
 
+    @EJB
+    private MEmployeeDb mEmployeeDb;
+    
     public String login() {
-        auth.login(empNo, password);
-        if (auth.isAuthenticated()) {
+        MEmployee employee = mEmployeeDb.getEmployee(empNo, password);
+        if (employee != null) {
+            auth.login(
+                employee.getId(),
+                employee.getEmployeeName(),
+                employee.getBossId(),
+                employee.getManager()
+            );
             return "top.xhtml?faces-redirect=true";
         } else {
             return null;
