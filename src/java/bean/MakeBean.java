@@ -11,6 +11,8 @@ import entity.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import util.*;
 
 @Named
@@ -27,12 +29,19 @@ public class MakeBean extends SuperBean implements Serializable {
     private MOrderDb mOrderDb;
     @EJB
     private TApplicationDb tApplicationDb;
-
+    
     @PostConstruct
     public void init() {
         setMeansItems();
         setOrderItems();
         entries.add(new Entry());
+        
+        Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+        Integer editId = (Integer)flash.get("editId");
+        if (editId != null) {
+            flash.put("editId", null);
+            edit(editId);
+        }
     }
     
     public String addEntry() {
@@ -46,15 +55,59 @@ public class MakeBean extends SuperBean implements Serializable {
     }
     
     public String save() {
-        tApplicationDb.save(auth.getEmpId(), auth.getBossId(), entries);
+        List<TLine> lines = new ArrayList<>();
+        Long totalFare = 0L;
+        for (Entry entry : pickAliveEntries()) {
+            TLine line = new TLine();
+            line.setUsedDate(entry.getUsedDate());
+            line.setOrderId(entry.getOrderId());
+            line.setPlace(entry.getPlace());
+            line.setPurpose(entry.getPurpose());
+            line.setMeansId(entry.getMeansId());
+            line.setSectionFrom(entry.getSectionFrom());
+            line.setSectionTo(entry.getSectionTo());
+            line.setIsRoundtrip((entry.getIsRoundTrip() ? 1 : 0));
+            line.setFare(entry.getFare());
+            line.setMemo(entry.getMemo());
+            lines.add(line);
+            totalFare += entry.getFare();
+        }
+        TApplication app = new TApplication();
+        app.setStatus(1);
+        app.setApplyId(auth.getEmpId());
+        app.setApproveId(auth.getBossId());
+        app.setTotalFare(totalFare);
+        app.setLines(lines);
+        tApplicationDb.save(app);
+
         return "top.xhtml?faces-redirect=true";
     }
     
     public String apply() {
+        List<Entry> target = pickAliveEntries();
         
         return "top.xhtml?faces-redirect=true";
     }
     
+    private void edit(Integer id) {
+        entries.clear();
+        TApplication app = tApplicationDb.findById(id);
+        for (TLine line : app.getLines()) {
+            Entry entry = new Entry();
+            entry.setUsedDate(line.getUsedDate());
+            entry.setOrderId(line.getOrderId());
+            entry.setPlace(line.getPlace());
+            entry.setPurpose(line.getPurpose());
+            entry.setMeansId(line.getMeansId());
+            entry.setSectionFrom(line.getSectionFrom());
+            entry.setSectionTo(line.getSectionTo());
+            entry.setIsRoundTrip((line.getIsRoundtrip()==1));
+            entry.setFare(line.getFare());
+            entry.setMemo(line.getMemo());
+            entries.add(entry);
+        }
+    }
+
     private void setMeansItems() {
         List<MMeans> meansList = mMeansDb.findAll();
         for (MMeans means : meansList) {

@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import util.*;
 
 @Named
@@ -25,12 +27,9 @@ public class SearchBean extends SuperBean {
     
     private final Map<String, Integer> applyItems = new LinkedHashMap<>();
     private final Map<String, Integer> approveItems = new LinkedHashMap<>();
-    private List<TApplication> appList = new ArrayList<>();
       
     @EJB
     private MEmployeeDb mEmployeeDb;
-    @EJB
-    private TApplicationDb tApplicationDb;
 
     @PostConstruct
     public void init() {
@@ -42,8 +41,13 @@ public class SearchBean extends SuperBean {
     }
     
     public String search() {
-        appList = tApplicationDb.getSearchResult(dateFrom, dateTo, applyId, approveId, status);
-        return "result";
+        Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+        flash.put("dateFrom", dateFrom);
+        flash.put("dateTo", dateTo);
+        flash.put("applyId", applyId);
+        flash.put("approveId", approveId);
+        flash.put("status", status);
+        return "result.xhtml?faces-redirect=true";
     }
     
     private void setApplyItems() {
@@ -60,33 +64,6 @@ public class SearchBean extends SuperBean {
         for (MEmployee employee : approveList) {
             approveItems.put(employee.getEmployeeName(), employee.getId());
         }
-    }
-
-    public boolean isDisabledEdit(TApplication app) {
-        boolean enabled = false;
-        if (app.getApplyId() == auth.getEmpId() && 
-                (app.getStatus() == 1 || app.getStatus() == 4)) {
-            enabled = true;
-        }
-        return !enabled;
-    }
-    
-    public boolean isDisabledDelete(TApplication app) {
-        boolean enabled = false;
-        if (app.getApplyId() == auth.getEmpId() &&
-                (app.getStatus() == 1 || app.getStatus() == 4)) {
-            enabled = true;
-        }
-        return !enabled;
-    }
-    
-    public boolean isDisabledCancel(TApplication app) {
-        boolean enabled = false;
-        if (app.getApplyId() == auth.getEmpId() &&
-                app.getStatus() == 2) {
-            enabled = true;
-        }
-        return !enabled;
     }
     
     public Date getDateFrom() {
@@ -135,9 +112,5 @@ public class SearchBean extends SuperBean {
 
     public Map<String, Integer> getApproveItems() {
         return approveItems;
-    }
-
-    public List<TApplication> getAppList() {
-        return appList;
     }
 }

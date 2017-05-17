@@ -18,15 +18,21 @@ public class TApplicationDb {
 
     public TApplicationDb() { }
     
-    public Long getRejectCount(Integer empNo) {
+    public TApplication findById(Integer id) {
+        Query query = em.createNamedQuery("TApplication.findById");
+        query.setParameter("id", id);
+        return (TApplication) query.getSingleResult();
+    }
+    
+    public Long getRejectCount(Integer empId) {
         Query query = em.createNamedQuery("TApplication.getRejectCount");
-        query.setParameter("applyId", empNo);
+        query.setParameter("applyId", empId);
         return (Long) query.getSingleResult();
     }
     
-    public Long getPendingCount(Integer empNo) {
+    public Long getPendingCount(Integer empId) {
         Query query = em.createNamedQuery("TApplication.getPendingCount");
-        query.setParameter("approveId", empNo);
+        query.setParameter("approveId", empId);
         return (Long) query.getSingleResult();
     }
     
@@ -75,32 +81,17 @@ public class TApplicationDb {
         return result;
     }
     
-    public void save(Integer empId, Integer bossId, List<Entry> entries) {
-        List<TLine> lines = new ArrayList<>();
-        Long totalFare = 0L;
-        for (Entry entry : entries) {
-            TLine line = new TLine();
-            line.setUsedDate(entry.getUsedDate());
-            line.setOrderId(entry.getOrderId());
-            line.setPlace(entry.getPlace());
-            line.setPurpose(entry.getPurpose());
-            line.setMeansId(entry.getMeansId());
-            line.setSectionFrom(entry.getSectionFrom());
-            line.setSectionTo(entry.getSectionTo());
-            line.setIsRoundtrip((entry.getIsRoundTrip() ? 1 : 0));
-            line.setFare(entry.getFare());
-            line.setMemo(entry.getMemo());
-            lines.add(line);
-            totalFare += entry.getFare();
-        }
-        TApplication app = new TApplication();
-        app.setStatus(1);
-        app.setApplyId(empId);
-        app.setApproveId(bossId);
-        app.setTotalFare(totalFare);
-        app.setLines(lines);
-        
+    public void save(TApplication app) {
         em.persist(app);
-    } 
+        em.flush();
+    }
     
+    public void delete(TApplication app) {
+        em.remove(em.merge(app));
+        em.flush();
+    }
+    
+    public void cancel(TApplication app) {
+        em.merge(app);
+    }
 }

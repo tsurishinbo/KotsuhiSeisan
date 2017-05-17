@@ -19,6 +19,7 @@
             </div>
             <div id="menu">
                 <ui:insert name="left">
+                    <h:link outcome="top" style="margin-right:10px;">トップ</h:link>
                     <h:link outcome="make" style="margin-right:10px;">申請作成</h:link>
                     <h:link outcome="search" style="margin-right:10px;">申請検索</h:link>
                     <ui:fragment rendered="#{indexBean.loginManager == 1}">
