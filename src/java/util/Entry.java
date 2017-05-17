@@ -6,6 +6,7 @@ import java.util.Date;
 
 public class Entry implements Serializable {
 
+    private Integer id;
     private Date usedDate;
     private String orderId;
     private String place;
@@ -18,6 +19,14 @@ public class Entry implements Serializable {
     private String memo;
     private boolean deleted = false;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+    
     public Date getUsedDate() {
         return usedDate;
     }

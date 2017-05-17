@@ -22,6 +22,7 @@ public class MakeBean extends SuperBean implements Serializable {
     private final Map<String, Integer> meansItems = new LinkedHashMap<>();;
     private final Map<String, String> orderItems = new LinkedHashMap<>();
     private final List<Entry> entries = new ArrayList<>();
+    private Integer editId = null;
     
     @EJB
     private MMeansDb mMeansDb;
@@ -29,20 +30,21 @@ public class MakeBean extends SuperBean implements Serializable {
     private MOrderDb mOrderDb;
     @EJB
     private TApplicationDb tApplicationDb;
-    
-    private boolean isEdit = false;
+    @EJB
+    private TLineDb tLineDb;
     
     @PostConstruct
     public void init() {
         setMeansItems();
         setOrderItems();
-        entries.add(new Entry());
         
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
-        Integer editId = (Integer)flash.get("editId");
-        if (editId != null) {
+        if (flash.get("editId") != null) {
+            editId = (Integer)flash.get("editId");
             flash.put("editId", null);
             edit(editId);
+        } else {
+            entries.add(new Entry());
         }
     }
     
@@ -57,10 +59,19 @@ public class MakeBean extends SuperBean implements Serializable {
     }
     
     public String save() {
-        if (isEdit) {
-            saveEdit();
-        } else {
+        if (editId == null) {
             saveNew();
+        } else {
+            saveEdit();
+        }
+        return "top.xhtml?faces-redirect=true";
+    }
+
+    public String apply() {
+        if (editId == null) {
+            applyNew();
+        } else {
+            applyEdit();
         }
         return "top.xhtml?faces-redirect=true";
     }
@@ -68,20 +79,22 @@ public class MakeBean extends SuperBean implements Serializable {
     private void saveNew() {
         List<TLine> lines = new ArrayList<>();
         Long totalFare = 0L;
-        for (Entry entry : pickAliveEntries()) {
-            TLine line = new TLine();
-            line.setUsedDate(entry.getUsedDate());
-            line.setOrderId(entry.getOrderId());
-            line.setPlace(entry.getPlace());
-            line.setPurpose(entry.getPurpose());
-            line.setMeansId(entry.getMeansId());
-            line.setSectionFrom(entry.getSectionFrom());
-            line.setSectionTo(entry.getSectionTo());
-            line.setIsRoundtrip((entry.getIsRoundTrip() ? 1 : 0));
-            line.setFare(entry.getFare());
-            line.setMemo(entry.getMemo());
-            lines.add(line);
-            totalFare += entry.getFare();
+        for (Entry entry : entries) {
+            if (!entry.isDeleted()) {
+                TLine line = new TLine();
+                line.setUsedDate(entry.getUsedDate());
+                line.setOrderId(entry.getOrderId());
+                line.setPlace(entry.getPlace());
+                line.setPurpose(entry.getPurpose());
+                line.setMeansId(entry.getMeansId());
+                line.setSectionFrom(entry.getSectionFrom());
+                line.setSectionTo(entry.getSectionTo());
+                line.setIsRoundtrip((entry.getIsRoundTrip() ? 1 : 0));
+                line.setFare(entry.getFare());
+                line.setMemo(entry.getMemo());
+                lines.add(line);
+                totalFare += entry.getFare();
+            }
         }
         TApplication app = new TApplication();
         app.setStatus(1);
@@ -95,16 +108,7 @@ public class MakeBean extends SuperBean implements Serializable {
     private void saveEdit() {
         
     }
-        
-    public String apply() {
-        if (isEdit) {
-            applyNew();
-        } else {
-            applyEdit();
-        }
-        return "top.xhtml?faces-redirect=true";
-    }
-    
+
     private void applyNew() {
         
     }
@@ -113,11 +117,43 @@ public class MakeBean extends SuperBean implements Serializable {
         
     }
     
+    private void editLine() {
+        for (Entry entry : entries) {
+            if (entry.getId() == null) {
+                if (!entry.isDeleted()) {
+                    //新規
+                    insertLine(entry);
+                }
+            } else {
+                if (!entry.isDeleted()) {
+                    //更新
+                    updateLine(entry);
+                } else {
+                    //削除
+                    deleteLine(entry);
+                }
+            }
+        }
+    }
+    
+    private void insertLine(Entry entry) {
+        
+        
+    }
+    
+    private void updateLine(Entry entry) {
+        
+    }
+        
+    private void deleteLine(Entry entry) {
+        
+    }
+    
     private void edit(Integer id) {
-        entries.clear();
         TApplication app = tApplicationDb.findById(id);
         for (TLine line : app.getLines()) {
             Entry entry = new Entry();
+            entry.setId(line.getId());
             entry.setUsedDate(line.getUsedDate());
             entry.setOrderId(line.getOrderId());
             entry.setPlace(line.getPlace());
@@ -130,7 +166,6 @@ public class MakeBean extends SuperBean implements Serializable {
             entry.setMemo(line.getMemo());
             entries.add(entry);
         }
-        isEdit = true;
     }
 
     private void setMeansItems() {
@@ -147,16 +182,6 @@ public class MakeBean extends SuperBean implements Serializable {
         }
     }
     
-    private List<Entry> pickAliveEntries() {
-        List<Entry> picked = new ArrayList<>();
-        for (Entry entry : entries) {
-            if (!entry.isDeleted()) {
-                picked.add(entry);
-            }
-        }
-        return picked;
-    }
-
     public Map<String, Integer> getMeansItems() {
         return meansItems;
     }
