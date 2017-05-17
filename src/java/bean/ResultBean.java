@@ -53,7 +53,7 @@ public class ResultBean extends SuperBean {
     public String cancel(TApplication app) {
         app.setStatus(1);
         app.setApplyDate(null);
-        tApplicationDb.cancel(app);
+        tApplicationDb.update(app);
 
         return null;
     }

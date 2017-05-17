@@ -76,8 +76,8 @@
                     </div>
                 </p:dataList>
                 <h:commandButton type="submit" value="追加" action="#{makeBean.addEntry()}" immediate="true" />
-                <h:commandButton type="submit" value="保存" action="#{makeBean.save()}" />
-                <h:commandButton type="submit" value="申請" />
+                <h:commandButton type="submit" value="保存" action="#{makeBean.save()}" onclick="return confirm('保存してよろしいですか？')" />
+                <h:commandButton type="submit" value="申請" action="#{makeBean.apply()}" onclick="return confirm('申請してよろしいですか？')" />
                 <h:messages />
             </ui:define>
         </ui:composition>

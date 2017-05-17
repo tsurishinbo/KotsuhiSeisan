@@ -30,6 +30,8 @@ public class MakeBean extends SuperBean implements Serializable {
     @EJB
     private TApplicationDb tApplicationDb;
     
+    private boolean isEdit = false;
+    
     @PostConstruct
     public void init() {
         setMeansItems();
@@ -55,6 +57,15 @@ public class MakeBean extends SuperBean implements Serializable {
     }
     
     public String save() {
+        if (isEdit) {
+            saveEdit();
+        } else {
+            saveNew();
+        }
+        return "top.xhtml?faces-redirect=true";
+    }
+    
+    private void saveNew() {
         List<TLine> lines = new ArrayList<>();
         Long totalFare = 0L;
         for (Entry entry : pickAliveEntries()) {
@@ -78,15 +89,28 @@ public class MakeBean extends SuperBean implements Serializable {
         app.setApproveId(auth.getBossId());
         app.setTotalFare(totalFare);
         app.setLines(lines);
-        tApplicationDb.save(app);
-
+        tApplicationDb.insert(app);
+    }
+    
+    private void saveEdit() {
+        
+    }
+        
+    public String apply() {
+        if (isEdit) {
+            applyNew();
+        } else {
+            applyEdit();
+        }
         return "top.xhtml?faces-redirect=true";
     }
     
-    public String apply() {
-        List<Entry> target = pickAliveEntries();
+    private void applyNew() {
         
-        return "top.xhtml?faces-redirect=true";
+    }
+    
+    private void applyEdit() {
+        
     }
     
     private void edit(Integer id) {
@@ -106,6 +130,7 @@ public class MakeBean extends SuperBean implements Serializable {
             entry.setMemo(line.getMemo());
             entries.add(entry);
         }
+        isEdit = true;
     }
 
     private void setMeansItems() {

@@ -81,17 +81,16 @@ public class TApplicationDb {
         return result;
     }
     
-    public void save(TApplication app) {
+    public void insert(TApplication app) {
         em.persist(app);
-        em.flush();
+    }
+    
+    public void update(TApplication app) {
+        em.merge(app);
     }
     
     public void delete(TApplication app) {
         em.remove(em.merge(app));
-        em.flush();
     }
     
-    public void cancel(TApplication app) {
-        em.merge(app);
-    }
 }
