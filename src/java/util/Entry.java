@@ -26,7 +26,7 @@ public class Entry implements Serializable {
     public void setId(Integer id) {
         this.id = id;
     }
-    
+
     public Date getUsedDate() {
         return usedDate;
     }

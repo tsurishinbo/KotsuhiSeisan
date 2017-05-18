@@ -18,12 +18,18 @@ public class TApplicationDb {
 
     public TApplicationDb() { }
     
-    public TApplication findById(Integer id) {
+    public TApplication findApplicationById(Integer id) {
         Query query = em.createNamedQuery("TApplication.findById");
         query.setParameter("id", id);
         return (TApplication) query.getSingleResult();
     }
-    
+
+    public TLine findLineById(Integer id) {
+        Query query = em.createNamedQuery("TLine.findById");
+        query.setParameter("id", id);
+        return (TLine) query.getSingleResult();
+    }
+
     public Long getRejectCount(Integer empId) {
         Query query = em.createNamedQuery("TApplication.getRejectCount");
         query.setParameter("applyId", empId);
@@ -81,16 +87,60 @@ public class TApplicationDb {
         return result;
     }
     
-    public void insert(TApplication app) {
+    /**
+     * 申請作成（新規保存・新規申請）
+     * @param app
+     */
+    public void make(TApplication app) {
         em.persist(app);
     }
-    
-    public void update(TApplication app) {
+
+    /**
+     * 申請更新（更新保存・更新申請）
+     * @param app
+     * @param addLines
+     * @param updLines
+     * @param delLines 
+     */
+    public void update(TApplication app, List<TLine> addLines, List<TLine> updLines, List<TLine> delLines) {
+        
+        List<TLine> lines = new ArrayList<>();
+
+        for (TLine addLine : addLines) {
+            em.persist(addLine);
+            lines.add(addLine);
+        }
+        for (TLine updLine : updLines) {
+            em.merge(updLine);
+            lines.add(updLine);
+        }
+        app.setLines(lines);
         em.merge(app);
+        
+        for (TLine delLine : delLines) {
+            em.remove(em.merge(delLine));
+        }
+        em.flush();
     }
     
+    /**
+     * 申請削除
+     * @param app 
+     */
     public void delete(TApplication app) {
         em.remove(em.merge(app));
+        em.flush();
     }
+    
+    /**
+     * 申請取消
+     * @param app 
+     */
+    public void cancel(TApplication app) {
+        em.merge(app);
+        em.flush();
+    }
+    
+    
     
 }

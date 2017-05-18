@@ -46,15 +46,6 @@ public class MOrder implements Serializable {
     public MOrder() {
     }
 
-    public MOrder(String id) {
-        this.id = id;
-    }
-
-    public MOrder(String id, String orderName) {
-        this.id = id;
-        this.orderName = orderName;
-    }
-
     public String getId() {
         return id;
     }

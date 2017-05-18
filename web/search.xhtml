@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
     <body>
         <ui:composition template="./templates/template.xhtml">
             <ui:define name="content">
@@ -41,6 +42,66 @@
                     <br/>
                 </div>
                 <h:commandButton action="#{searchBean.search()}" value="検索" />
+                <ui:fragment rendered="#{searchBean.appList != null}">
+                    <hr/>
+                    <p:dataTable id="appList" var="app" value="#{searchBean.appList}">
+                        <!-- 申請ID -->
+                        <p:column id="colId" headerText="申請ID" width="5%">
+                            <div style="text-align:center">
+                                <p:outputLabel value="#{app.id}" />
+                            </div>
+                        </p:column>
+                        <!-- ステータス -->
+                        <p:column id="colStatus" headerText="ステータス" width="8%">
+                            <p:outputLabel value="未申請" rendered="#{app.status == 1}" />
+                            <p:outputLabel value="承認待ち" rendered="#{app.status == 2}" />
+                            <p:outputLabel value="承認済" rendered="#{app.status == 3}" />
+                            <p:outputLabel value="差戻し" rendered="#{app.status == 4}" />
+                        </p:column>
+                        <!-- 申請者 -->
+                        <p:column id="colApplyName" headerText="申請者" width="15%">
+                            <p:outputLabel value="#{app.applyEmployee.employeeName}" />
+                        </p:column>
+                        <!-- 申請日 -->
+                        <p:column id="colApplyDate" headerText="申請日" width="8%">
+                            <div style="text-align:center">
+                                <p:outputLabel value="#{app.applyDate}">
+                                    <f:convertDateTime pattern="yyyy/MM/dd" />
+                                </p:outputLabel>
+                            </div>
+                        </p:column>
+                        <!-- 承認者 -->
+                        <p:column id="colApproveName" headerText="承認者" width="15%">
+                            <p:outputLabel value="#{app.approveEmployee.employeeName}" />
+                        </p:column>
+                        <!-- 承認日 -->
+                        <p:column id="colApproveDate" headerText="承認日" width="8%">
+                            <div style="text-align:center">
+                                <p:outputLabel value="#{app.approveDate}">
+                                    <f:convertDateTime pattern="yyyy/MM/dd" />
+                                </p:outputLabel>
+                            </div>
+                        </p:column>
+                        <!-- 料金 -->
+                        <p:column id="colTotalFare" headerText="料金" width="8%">
+                            <div style="text-align:right">
+                                <p:outputLabel value="#{app.totalFare}">
+                                    <f:convertNumber pattern="#,##0" />
+                                </p:outputLabel>
+                            </div>
+                        </p:column>
+                        <!-- 操作 -->
+                        <p:column id="colControl" headerText="操作" width="*">
+                            <h:commandButton id="btnDetail" value="詳細" />
+                            <h:commandButton id="btnEdit" value="編集" 
+                                disabled="#{searchBean.isDisabledEdit(app)}" action="#{searchBean.edit(app)}" />
+                            <h:commandButton id="btnDelete" value="削除" 
+                                             disabled="#{searchBean.isDisabledDelete(app)}" action="#{searchBean.delete(app)}" onclick="return confirm('削除してもよろしいですか？')" />
+                            <h:commandButton id="btnCancel" value="申請取消"
+                                disabled="#{searchBean.isDisabledCancel(app)}" action="#{searchBean.cancel(app)}" onclick="return confirm('申請を取消してもよろしいですか？')" />
+                        </p:column>
+                    </p:dataTable>
+                </ui:fragment>
             </ui:define>
         </ui:composition>
     </body>

@@ -10,6 +10,7 @@ import db.*;
 import entity.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
@@ -30,8 +31,6 @@ public class MakeBean extends SuperBean implements Serializable {
     private MOrderDb mOrderDb;
     @EJB
     private TApplicationDb tApplicationDb;
-    @EJB
-    private TLineDb tLineDb;
     
     @PostConstruct
     public void init() {
@@ -60,40 +59,32 @@ public class MakeBean extends SuperBean implements Serializable {
     
     public String save() {
         if (editId == null) {
-            saveNew();
+            newSave();
         } else {
-            saveEdit();
+            updateSave();
         }
         return "top.xhtml?faces-redirect=true";
     }
 
     public String apply() {
         if (editId == null) {
-            applyNew();
+            newApply();
         } else {
-            applyEdit();
+            updateApply();
         }
         return "top.xhtml?faces-redirect=true";
     }
     
-    private void saveNew() {
-        List<TLine> lines = new ArrayList<>();
+    private void newSave() {
+        int sortNo = 1;
         Long totalFare = 0L;
+        List<TLine> lines = new ArrayList<>();
         for (Entry entry : entries) {
             if (!entry.isDeleted()) {
                 TLine line = new TLine();
-                line.setUsedDate(entry.getUsedDate());
-                line.setOrderId(entry.getOrderId());
-                line.setPlace(entry.getPlace());
-                line.setPurpose(entry.getPurpose());
-                line.setMeansId(entry.getMeansId());
-                line.setSectionFrom(entry.getSectionFrom());
-                line.setSectionTo(entry.getSectionTo());
-                line.setIsRoundtrip((entry.getIsRoundTrip() ? 1 : 0));
-                line.setFare(entry.getFare());
-                line.setMemo(entry.getMemo());
-                lines.add(line);
+                lines.add(setLine(line, entry, sortNo));
                 totalFare += entry.getFare();
+                sortNo += 1;
             }
         }
         TApplication app = new TApplication();
@@ -102,55 +93,118 @@ public class MakeBean extends SuperBean implements Serializable {
         app.setApproveId(auth.getBossId());
         app.setTotalFare(totalFare);
         app.setLines(lines);
-        tApplicationDb.insert(app);
+        tApplicationDb.make(app);
     }
     
-    private void saveEdit() {
-        
-    }
-
-    private void applyNew() {
-        
-    }
-    
-    private void applyEdit() {
-        
-    }
-    
-    private void editLine() {
+    private void newApply() {
+        int sortNo = 1;
+        Long totalFare = 0L;
+        List<TLine> lines = new ArrayList<>();
         for (Entry entry : entries) {
-            if (entry.getId() == null) {
-                if (!entry.isDeleted()) {
-                    //新規
-                    insertLine(entry);
-                }
-            } else {
-                if (!entry.isDeleted()) {
-                    //更新
-                    updateLine(entry);
-                } else {
-                    //削除
-                    deleteLine(entry);
-                }
+            if (!entry.isDeleted()) {
+                TLine line = new TLine();
+                lines.add(setLine(line, entry, sortNo));
+                totalFare += entry.getFare();
+                sortNo += 1;
             }
         }
+        TApplication app = new TApplication();
+        app.setStatus(2);
+        app.setApplyId(auth.getEmpId());
+        app.setApplyDate(new Date());
+        app.setApproveId(auth.getBossId());
+        app.setTotalFare(totalFare);
+        app.setLines(lines);
+        tApplicationDb.make(app);
+    }
+   
+    private void updateSave() {
+        List<TLine> addLines = new ArrayList<>();
+        List<TLine> updLines = new ArrayList<>();
+        List<TLine> delLines = new ArrayList<>(); 
+        
+        TApplication app = tApplicationDb.findApplicationById(editId);
+        int sortNo = 1;
+        Long totalFare = 0L;
+        for (Entry entry : entries) {
+            if (entry.getId() == null && !entry.isDeleted()) {
+                //新規
+                TLine line = new TLine();
+                addLines.add(setLine(line, entry, sortNo));
+                totalFare += line.getFare();
+                sortNo += 1;
+            }
+            if (entry.getId() != null && !entry.isDeleted()) {
+                //更新
+                TLine line = tApplicationDb.findLineById(entry.getId());
+                updLines.add(setLine(line, entry, sortNo));
+                totalFare += line.getFare();
+                sortNo += 1;
+            }
+            if (entry.getId() != null && entry.isDeleted()) {
+                //削除
+                TLine line = tApplicationDb.findLineById(entry.getId());
+                delLines.add(line);
+            }
+        }
+        app.setTotalFare(totalFare);
+        tApplicationDb.update(app, addLines, updLines, delLines);
     }
     
-    private void insertLine(Entry entry) {
+    private void updateApply() {
+        List<TLine> addLines = new ArrayList<>();
+        List<TLine> updLines = new ArrayList<>();
+        List<TLine> delLines = new ArrayList<>(); 
         
-        
+        TApplication app = tApplicationDb.findApplicationById(editId);
+        int sortNo = 1;
+        Long totalFare = 0L;
+        for (Entry entry : entries) {
+            if (entry.getId() == null && !entry.isDeleted()) {
+                //新規
+                TLine line = new TLine();
+                addLines.add(setLine(line, entry, sortNo));
+                totalFare += line.getFare();
+                sortNo += 1;
+            }
+            if (entry.getId() != null && !entry.isDeleted()) {
+                //更新
+                TLine line = tApplicationDb.findLineById(entry.getId());
+                updLines.add(setLine(line, entry, sortNo));
+                totalFare += line.getFare();
+                sortNo += 1;
+            }
+            if (entry.getId() != null && entry.isDeleted()) {
+                //削除
+                TLine line = tApplicationDb.findLineById(entry.getId());
+                delLines.add(line);
+            }
+        }
+        app.setStatus(2);
+        app.setApplyDate(new Date());
+        app.setTotalFare(totalFare);
+        tApplicationDb.update(app, addLines, updLines, delLines);
     }
     
-    private void updateLine(Entry entry) {
-        
-    }
-        
-    private void deleteLine(Entry entry) {
-        
+    
+    private TLine setLine(TLine line, Entry entry, int sortNo) {
+        line.setId(entry.getId());
+        line.setUsedDate(entry.getUsedDate());
+        line.setOrderId(entry.getOrderId());
+        line.setPlace(entry.getPlace());
+        line.setPurpose(entry.getPurpose());
+        line.setMeansId(entry.getMeansId());
+        line.setSectionFrom(entry.getSectionFrom());
+        line.setSectionTo(entry.getSectionTo());
+        line.setIsRoundtrip((entry.getIsRoundTrip() ? 1 : 0));
+        line.setFare(entry.getFare());
+        line.setMemo(entry.getMemo());
+        line.setSortNo(sortNo);
+        return line;
     }
     
     private void edit(Integer id) {
-        TApplication app = tApplicationDb.findById(id);
+        TApplication app = tApplicationDb.findApplicationById(id);
         for (TLine line : app.getLines()) {
             Entry entry = new Entry();
             entry.setId(line.getId());

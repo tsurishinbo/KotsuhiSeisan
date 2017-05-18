@@ -60,17 +60,6 @@ public class MEmployee implements Serializable {
     public MEmployee() {
     }
 
-    public MEmployee(Integer id) {
-        this.id = id;
-    }
-
-    public MEmployee(Integer id, String password, String employeeName, int manager) {
-        this.id = id;
-        this.password = password;
-        this.employeeName = employeeName;
-        this.manager = manager;
-    }
-
     public Integer getId() {
         return id;
     }

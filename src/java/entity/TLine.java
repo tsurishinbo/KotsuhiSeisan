@@ -103,34 +103,18 @@ public class TLine implements Serializable {
     @Size(max = 2147483647)
     @Column(name = "memo")
     private String memo;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "sort_no")
+    private int sortNo;
     @OneToOne
     @JoinColumn(name = "means_id", referencedColumnName = "id", insertable = false, updatable = false)
     private MMeans means;
     @OneToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id", insertable = false, updatable = false)
     private MOrder order;
-    @OneToMany
-    @JoinColumn(name = "id", referencedColumnName = "application_id", insertable = true, updatable = true)
-    private List<TLine> lines;
     
     public TLine() {
-    }
-
-    public TLine(Integer id) {
-        this.id = id;
-    }
-
-    public TLine(Integer id, int applicationId, Date usedDate, String place, String purpose, int meansId, String sectionFrom, String sectionTo, int isRoundtrip, Long fare) {
-        this.id = id;
-        this.applicationId = applicationId;
-        this.usedDate = usedDate;
-        this.place = place;
-        this.purpose = purpose;
-        this.meansId = meansId;
-        this.sectionFrom = sectionFrom;
-        this.sectionTo = sectionTo;
-        this.isRoundtrip = isRoundtrip;
-        this.fare = fare;
     }
 
     public Integer getId() {
@@ -227,6 +211,14 @@ public class TLine implements Serializable {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public int getSortNo() {
+        return sortNo;
+    }
+
+    public void setSortNo(int sortNo) {
+        this.sortNo = sortNo;
     }
 
     @Override

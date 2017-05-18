@@ -45,15 +45,6 @@ public class MMeans implements Serializable {
     public MMeans() {
     }
 
-    public MMeans(Integer id) {
-        this.id = id;
-    }
-
-    public MMeans(Integer id, String means) {
-        this.id = id;
-        this.means = means;
-    }
-
     public Integer getId() {
         return id;
     }

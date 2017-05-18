@@ -17,7 +17,7 @@
                                 requiredMessage="#{stat.index+1}行目の利用日を入力してください。"
                                 converterMessage="#{stat.index+1}行目の利用日をyyyy/mm/ddの形式で入力してください。">
                                 <f:validateRequired />
-                                <f:convertDateTime pattern="yyyy/MM/dd" locale="ja" />
+                                <f:convertDateTime pattern="yyyy/MM/dd" timeZone="Asia/Tokyo" />
                             </h:inputText>
                             <br/>
                             作業コード：

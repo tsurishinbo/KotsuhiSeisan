@@ -21,6 +21,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -81,20 +82,10 @@ public class TApplication implements Serializable {
     private MEmployee approveEmployee;
     @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "application_id", referencedColumnName = "id", insertable = true, updatable = true)
+    @OrderBy("sortNo asc")
     private List<TLine> lines;
 
     public TApplication() {
-    }
-
-    public TApplication(Integer id) {
-        this.id = id;
-    }
-
-    public TApplication(Integer id, int status, int applyId, Long totalFare) {
-        this.id = id;
-        this.status = status;
-        this.applyId = applyId;
-        this.totalFare = totalFare;
     }
 
     public Integer getId() {

@@ -6,6 +6,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import db.*;
 import entity.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -13,23 +14,27 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
+import javax.faces.view.ViewScoped;
 import util.*;
 
 @Named
-@RequestScoped
-public class SearchBean extends SuperBean {
+@ViewScoped
+public class SearchBean extends SuperBean implements Serializable {
     
     private Date dateFrom;
     private Date dateTo;
     private Integer applyId;
     private Integer approveId;
     private Integer status;
-    
+    private List<TApplication> appList;
+
     private final Map<String, Integer> applyItems = new LinkedHashMap<>();
     private final Map<String, Integer> approveItems = new LinkedHashMap<>();
       
     @EJB
     private MEmployeeDb mEmployeeDb;
+    @EJB
+    private TApplicationDb tApplicationDb;
 
     @PostConstruct
     public void init() {
@@ -41,13 +46,26 @@ public class SearchBean extends SuperBean {
     }
     
     public String search() {
+        appList = tApplicationDb.getSearchResult(dateFrom, dateTo, applyId, approveId, status);
+        return null;
+    }
+    
+    public String edit(TApplication app) {
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
-        flash.put("dateFrom", dateFrom);
-        flash.put("dateTo", dateTo);
-        flash.put("applyId", applyId);
-        flash.put("approveId", approveId);
-        flash.put("status", status);
-        return "result.xhtml?faces-redirect=true";
+        flash.put("editId", app.getId());
+        return "make.xhtml?faces-redirect=true";
+    }
+    
+    public String delete(TApplication app) {
+        tApplicationDb.delete(app);
+        return search();
+    }
+    
+    public String cancel(TApplication app) {
+        app.setStatus(1);
+        app.setApplyDate(null);
+        tApplicationDb.cancel(app);
+        return search();
     }
     
     private void setApplyItems() {
@@ -64,6 +82,33 @@ public class SearchBean extends SuperBean {
         for (MEmployee employee : approveList) {
             approveItems.put(employee.getEmployeeName(), employee.getId());
         }
+    }
+    
+    public boolean isDisabledEdit(TApplication app) {
+        boolean enabled = false;
+        if (app.getApplyId() == auth.getEmpId() && 
+                (app.getStatus() == 1 || app.getStatus() == 4)) {
+            enabled = true;
+        }
+        return !enabled;
+    }
+    
+    public boolean isDisabledDelete(TApplication app) {
+        boolean enabled = false;
+        if (app.getApplyId() == auth.getEmpId() &&
+                (app.getStatus() == 1 || app.getStatus() == 4)) {
+            enabled = true;
+        }
+        return !enabled;
+    }
+    
+    public boolean isDisabledCancel(TApplication app) {
+        boolean enabled = false;
+        if (app.getApplyId() == auth.getEmpId() &&
+                app.getStatus() == 2) {
+            enabled = true;
+        }
+        return !enabled;
     }
     
     public Date getDateFrom() {
@@ -106,6 +151,14 @@ public class SearchBean extends SuperBean {
         this.status = status;
     }
 
+    public List<TApplication> getAppList() {
+        return appList;
+    }
+
+    public void setAppList(List<TApplication> appList) {
+        this.appList = appList;
+    }
+    
     public Map<String, Integer> getApplyItems() {
         return applyItems;
     }
