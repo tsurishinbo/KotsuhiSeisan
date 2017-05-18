@@ -103,24 +103,18 @@ public class TApplicationDb {
      * @param delLines 
      */
     public void update(TApplication app, List<TLine> addLines, List<TLine> updLines, List<TLine> delLines) {
-        
-        List<TLine> lines = new ArrayList<>();
-
         for (TLine addLine : addLines) {
             em.persist(addLine);
-            lines.add(addLine);
         }
         for (TLine updLine : updLines) {
             em.merge(updLine);
-            lines.add(updLine);
         }
-        app.setLines(lines);
-        em.merge(app);
-        
         for (TLine delLine : delLines) {
             em.remove(em.merge(delLine));
         }
+        em.merge(app);
         em.flush();
+        em.clear();
     }
     
     /**
@@ -140,7 +134,4 @@ public class TApplicationDb {
         em.merge(app);
         em.flush();
     }
-    
-    
-    
 }

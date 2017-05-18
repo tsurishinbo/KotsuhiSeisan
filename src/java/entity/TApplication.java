@@ -80,7 +80,7 @@ public class TApplication implements Serializable {
     @OneToOne
     @JoinColumn(name = "approve_id", referencedColumnName = "id", insertable = false, updatable = false)
     private MEmployee approveEmployee;
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "application_id", referencedColumnName = "id", insertable = true, updatable = true)
     @OrderBy("sortNo asc")
     private List<TLine> lines;

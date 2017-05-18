@@ -129,22 +129,25 @@ public class MakeBean extends SuperBean implements Serializable {
         for (Entry entry : entries) {
             if (entry.getId() == null && !entry.isDeleted()) {
                 //新規
-                TLine line = new TLine();
-                addLines.add(setLine(line, entry, sortNo));
-                totalFare += line.getFare();
+                TLine addLine = new TLine();
+                setLine(addLine, entry, sortNo);
+                addLine.setApplicationId(editId);
+                addLines.add(addLine);
+                totalFare += addLine.getFare();
                 sortNo += 1;
             }
             if (entry.getId() != null && !entry.isDeleted()) {
                 //更新
-                TLine line = tApplicationDb.findLineById(entry.getId());
-                updLines.add(setLine(line, entry, sortNo));
-                totalFare += line.getFare();
+                TLine updLine = tApplicationDb.findLineById(entry.getId());
+                setLine(updLine, entry, sortNo);
+                updLines.add(updLine);
+                totalFare += updLine.getFare();
                 sortNo += 1;
             }
             if (entry.getId() != null && entry.isDeleted()) {
                 //削除
-                TLine line = tApplicationDb.findLineById(entry.getId());
-                delLines.add(line);
+                TLine delLine = tApplicationDb.findLineById(entry.getId());
+                delLines.add(delLine);
             }
         }
         app.setTotalFare(totalFare);
@@ -162,22 +165,25 @@ public class MakeBean extends SuperBean implements Serializable {
         for (Entry entry : entries) {
             if (entry.getId() == null && !entry.isDeleted()) {
                 //新規
-                TLine line = new TLine();
-                addLines.add(setLine(line, entry, sortNo));
-                totalFare += line.getFare();
+                TLine addLine = new TLine();
+                setLine(addLine, entry, sortNo);
+                addLine.setApplicationId(editId);
+                addLines.add(addLine);
+                totalFare += addLine.getFare();
                 sortNo += 1;
             }
             if (entry.getId() != null && !entry.isDeleted()) {
                 //更新
-                TLine line = tApplicationDb.findLineById(entry.getId());
-                updLines.add(setLine(line, entry, sortNo));
-                totalFare += line.getFare();
+                TLine updLine = tApplicationDb.findLineById(entry.getId());
+                setLine(updLine, entry, sortNo);
+                updLines.add(updLine);
+                totalFare += updLine.getFare();
                 sortNo += 1;
             }
             if (entry.getId() != null && entry.isDeleted()) {
                 //削除
-                TLine line = tApplicationDb.findLineById(entry.getId());
-                delLines.add(line);
+                TLine delLine = tApplicationDb.findLineById(entry.getId());
+                delLines.add(delLine);
             }
         }
         app.setStatus(2);
