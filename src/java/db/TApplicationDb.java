@@ -84,6 +84,7 @@ public class TApplicationDb {
         }
 
         List<TApplication> result = query.getResultList();
+        em.clear();
         return result;
     }
     
@@ -113,8 +114,8 @@ public class TApplicationDb {
             em.remove(em.merge(delLine));
         }
         em.merge(app);
-        em.flush();
-        em.clear();
+        em.flush(); //強制的にDBに反映
+        em.clear(); //エンティティを破棄（これをしないとエンティティが残る）
     }
     
     /**
@@ -123,7 +124,6 @@ public class TApplicationDb {
      */
     public void delete(TApplication app) {
         em.remove(em.merge(app));
-        em.flush();
     }
     
     /**
@@ -132,6 +132,5 @@ public class TApplicationDb {
      */
     public void cancel(TApplication app) {
         em.merge(app);
-        em.flush();
     }
 }

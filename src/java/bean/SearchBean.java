@@ -15,6 +15,7 @@ import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
+import org.primefaces.context.RequestContext;
 import util.*;
 
 @Named
@@ -48,6 +49,10 @@ public class SearchBean extends SuperBean implements Serializable {
     public String search() {
         appList = tApplicationDb.getSearchResult(dateFrom, dateTo, applyId, approveId, status);
         return null;
+    }
+    
+    public void detail(TApplication app) {
+        RequestContext.getCurrentInstance().openDialog("application.xhtml");
     }
     
     public String edit(TApplication app) {

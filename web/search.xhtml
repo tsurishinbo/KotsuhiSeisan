@@ -34,7 +34,7 @@
                     ステータス：
                     <h:selectOneRadio id="status" value="#{searchBean.status}">
                         <f:selectItem itemValue="0" itemLabel="すべて" />
-                        <f:selectItem itemValue="1" itemLabel="未承認" />
+                        <f:selectItem itemValue="1" itemLabel="未申請" />
                         <f:selectItem itemValue="2" itemLabel="承認待ち" />
                         <f:selectItem itemValue="3" itemLabel="承認済" />
                         <f:selectItem itemValue="4" itemLabel="差戻し" />
@@ -92,7 +92,7 @@
                         </p:column>
                         <!-- 操作 -->
                         <p:column id="colControl" headerText="操作" width="*">
-                            <h:commandButton id="btnDetail" value="詳細" />
+                            <h:commandButton id="btnDetail" value="詳細" actionListener="#{searchBean.detail(app)}" />
                             <h:commandButton id="btnEdit" value="編集" 
                                 disabled="#{searchBean.isDisabledEdit(app)}" action="#{searchBean.edit(app)}" />
                             <h:commandButton id="btnDelete" value="削除" 
