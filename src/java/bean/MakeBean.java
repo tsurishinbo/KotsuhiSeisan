@@ -6,24 +6,24 @@ import javax.inject.Named;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import db.*;
-import entity.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
+import db.*;
+import entity.*;
 import util.*;
 
 @Named
 @ViewScoped
 public class MakeBean extends SuperBean implements Serializable {
 
-    private final Map<String, Integer> meansItems = new LinkedHashMap<>();;
-    private final Map<String, String> orderItems = new LinkedHashMap<>();
-    private final List<Entry> entries = new ArrayList<>();
-    private Integer editId = null;
+    private final Map<String, Integer> meansItems = new LinkedHashMap<>();  //交通手段リスト
+    private final Map<String, String> orderItems = new LinkedHashMap<>();   //作業コードリスト
+    private final List<Entry> entries = new ArrayList<>();  //申請明細リスト
+    private Integer editId = null;  //編集申請ID                
     
     @EJB
     private MMeansDb mMeansDb;
@@ -32,49 +32,80 @@ public class MakeBean extends SuperBean implements Serializable {
     @EJB
     private TApplicationDb tApplicationDb;
     
+    /**
+     * 初期処理
+     */
     @PostConstruct
     public void init() {
-        setMeansItems();
-        setOrderItems();
-        
+        //リストの作成
+        makeMeansItems();
+        makeOrderItems();
+        //フラッシュから情報を取得
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
-        if (flash.get("editId") != null) {
-            editId = (Integer)flash.get("editId");
-            flash.put("editId", null);
-            edit(editId);
-        } else {
+        if (flash.size() == 0) {
+            //メニューから遷移：空の申請明細を１件追加
             entries.add(new Entry());
+        } else {
+            //申請照会画面から遷移：画面に編集対象の申請内容を表示
+            editId = (Integer)flash.get("editId");
+            edit(editId);
         }
     }
     
+    /**
+     * 申請明細の追加
+     * @return 
+     */
     public String addEntry() {
         entries.add(new Entry());
         return null;
     }
-    
+
+    /**
+     * 申請明細の削除
+     * @param entry
+     * @return 
+     */
     public String removeEntry(Entry entry) {
         entry.setDeleted(true);
         return null;
     }
     
+    /**
+     * 保存処理
+     * @return 
+     */
     public String save() {
         if (editId == null) {
+            //新規保存
             newSave();
         } else {
+            //既存データの保存
             updateSave();
         }
+        //トップ画面に遷移
         return "top.xhtml?faces-redirect=true";
     }
 
+    /**
+     * 申請処理
+     * @return 
+     */
     public String apply() {
         if (editId == null) {
+            //新規申請
             newApply();
         } else {
+            //既存データの申請
             updateApply();
         }
+        //トップ画面に遷移
         return "top.xhtml?faces-redirect=true";
     }
     
+    /**
+     * 新規保存処理
+     */
     private void newSave() {
         int sortNo = 1;
         Long totalFare = 0L;
@@ -96,6 +127,9 @@ public class MakeBean extends SuperBean implements Serializable {
         tApplicationDb.make(app);
     }
     
+    /**
+     * 新規申請処理
+     */
     private void newApply() {
         int sortNo = 1;
         Long totalFare = 0L;
@@ -118,6 +152,9 @@ public class MakeBean extends SuperBean implements Serializable {
         tApplicationDb.make(app);
     }
    
+    /**
+     * 既存データの保存処理
+     */
     private void updateSave() {
         List<TLine> addLines = new ArrayList<>();
         List<TLine> updLines = new ArrayList<>();
@@ -154,6 +191,9 @@ public class MakeBean extends SuperBean implements Serializable {
         tApplicationDb.update(app, addLines, updLines, delLines);
     }
     
+    /**
+     * 既存データの申請処理
+     */
     private void updateApply() {
         List<TLine> addLines = new ArrayList<>();
         List<TLine> updLines = new ArrayList<>();
@@ -192,7 +232,13 @@ public class MakeBean extends SuperBean implements Serializable {
         tApplicationDb.update(app, addLines, updLines, delLines);
     }
     
-    
+    /**
+     * 申請明細リストの内容をエンティティに設定
+     * @param line
+     * @param entry
+     * @param sortNo
+     * @return 
+     */
     private TLine setLine(TLine line, Entry entry, int sortNo) {
         line.setId(entry.getId());
         line.setUsedDate(entry.getUsedDate());
@@ -209,6 +255,10 @@ public class MakeBean extends SuperBean implements Serializable {
         return line;
     }
     
+    /**
+     * エンティティの内容を申請明細リストに設定
+     * @param id 
+     */
     private void edit(Integer id) {
         TApplication app = tApplicationDb.findApplicationById(id);
         for (TLine line : app.getLines()) {
@@ -228,28 +278,46 @@ public class MakeBean extends SuperBean implements Serializable {
         }
     }
 
-    private void setMeansItems() {
+    /**
+     * 交通手段リストの作成
+     */
+    private void makeMeansItems() {
         List<MMeans> meansList = mMeansDb.findAll();
         for (MMeans means : meansList) {
             meansItems.put(means.getMeans(), means.getId());
         }
     }
-    
-    private void setOrderItems() {
+
+    /**
+     * 作業コードリストの作成
+     */
+    private void makeOrderItems() {
         List<MOrder> orderList = mOrderDb.findAll();
         for (MOrder order : orderList) {
             orderItems.put(order.getId() + ":" + order.getOrderName(), order.getId());
         }
     }
     
+    /**
+     * 交通手段リストの取得
+     * @return 
+     */
     public Map<String, Integer> getMeansItems() {
         return meansItems;
     }
 
+    /**
+     * 作業コードリストの取得
+     * @return 
+     */
     public Map<String, String> getOrderItems() {
         return orderItems;
     }
 
+    /**
+     * 申請明細リストの取得
+     * @return 
+     */
     public List<Entry> getEntries() {
         return entries;
     }
