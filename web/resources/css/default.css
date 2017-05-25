@@ -11,6 +11,11 @@ body {
     margin: 10px;
 }
 
+h3 {
+    border-top: #4169e1 1px solid;
+    border-bottom: #4169e1 1px solid;
+}
+
 table.type03 {
 	border-collapse: collapse;
 	text-align: left;

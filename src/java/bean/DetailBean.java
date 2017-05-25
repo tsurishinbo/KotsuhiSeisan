@@ -8,6 +8,7 @@ import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
+import java.util.List;
 import db.*;
 import entity.*;
 import util.*;

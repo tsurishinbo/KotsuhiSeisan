@@ -57,10 +57,10 @@
                             往復：
                             <h:selectBooleanCheckbox id="is_round_trip" value="#{entry.isRoundTrip}" />
                             <br/>
-                            片道料金：
+                            料金：
                             <h:inputText id="fare" value="#{entry.fare}"
-                                requiredMessage="#{stat.index+1}行目の片道料金を入力してください。"
-                                converterMessage="#{stat.index+1}行目の片道料金は1～999999の数値で入力してください。">
+                                requiredMessage="#{stat.index+1}行目の料金を入力してください。"
+                                converterMessage="#{stat.index+1}行目の料金は1～999999の数値で入力してください。">
                                 <f:validateRequired />
                                 <f:validateLongRange minimum="1" maximum="999999" />
                             </h:inputText>
@@ -69,7 +69,7 @@
                             <h:inputText id="memo" value="#{entry.memo}" maxlength="100" size="100">
                             </h:inputText>
                             <br/>
-                            <h:commandButton type="button" value="料金検索" />
+                            <h:commandButton type="button" value="料金検索" onclick="callApiFromMakePage(#{stat.index})"/>
                             <h:commandButton type="submit" value="削除" action="#{makeBean.removeEntry(entry)}" immediate="true" />
                             <hr/>
                         </ui:fragment>

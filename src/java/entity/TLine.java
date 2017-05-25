@@ -36,19 +36,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "t_line")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TLine.findAll", query = "SELECT t FROM TLine t")
-    , @NamedQuery(name = "TLine.findById", query = "SELECT t FROM TLine t WHERE t.id = :id")
-    , @NamedQuery(name = "TLine.findByApplicationId", query = "SELECT t FROM TLine t WHERE t.applicationId = :applicationId")
-    , @NamedQuery(name = "TLine.findByUsedDate", query = "SELECT t FROM TLine t WHERE t.usedDate = :usedDate")
-    , @NamedQuery(name = "TLine.findByOrderId", query = "SELECT t FROM TLine t WHERE t.orderId = :orderId")
-    , @NamedQuery(name = "TLine.findByPlace", query = "SELECT t FROM TLine t WHERE t.place = :place")
-    , @NamedQuery(name = "TLine.findByPurpose", query = "SELECT t FROM TLine t WHERE t.purpose = :purpose")
-    , @NamedQuery(name = "TLine.findByMeansId", query = "SELECT t FROM TLine t WHERE t.meansId = :meansId")
-    , @NamedQuery(name = "TLine.findBySectionFrom", query = "SELECT t FROM TLine t WHERE t.sectionFrom = :sectionFrom")
-    , @NamedQuery(name = "TLine.findBySectionTo", query = "SELECT t FROM TLine t WHERE t.sectionTo = :sectionTo")
-    , @NamedQuery(name = "TLine.findByIsRoundtrip", query = "SELECT t FROM TLine t WHERE t.isRoundtrip = :isRoundtrip")
-    , @NamedQuery(name = "TLine.findByFare", query = "SELECT t FROM TLine t WHERE t.fare = :fare")
-    , @NamedQuery(name = "TLine.findByMemo", query = "SELECT t FROM TLine t WHERE t.memo = :memo")})
+    @NamedQuery(name = "TLine.findAll", query = "SELECT t FROM TLine t order by t.sortNo")
+    , @NamedQuery(name = "TLine.findById", query = "SELECT t FROM TLine t WHERE t.id = :id order by t.sortNo")
+    , @NamedQuery(name = "TLine.findByApplicationId", query = "SELECT t FROM TLine t WHERE t.applicationId = :applicationId order by t.sortNo")
+    , @NamedQuery(name = "TLine.findByUsedDate", query = "SELECT t FROM TLine t WHERE t.usedDate = :usedDate order by t.sortNo")
+    , @NamedQuery(name = "TLine.findByOrderId", query = "SELECT t FROM TLine t WHERE t.orderId = :orderId order by t.sortNo")
+    , @NamedQuery(name = "TLine.findByPlace", query = "SELECT t FROM TLine t WHERE t.place = :place order by t.sortNo")
+    , @NamedQuery(name = "TLine.findByPurpose", query = "SELECT t FROM TLine t WHERE t.purpose = :purpose order by t.sortNo")
+    , @NamedQuery(name = "TLine.findByMeansId", query = "SELECT t FROM TLine t WHERE t.meansId = :meansId order by t.sortNo")
+    , @NamedQuery(name = "TLine.findBySectionFrom", query = "SELECT t FROM TLine t WHERE t.sectionFrom = :sectionFrom order by t.sortNo")
+    , @NamedQuery(name = "TLine.findBySectionTo", query = "SELECT t FROM TLine t WHERE t.sectionTo = :sectionTo order by t.sortNo")
+    , @NamedQuery(name = "TLine.findByIsRoundtrip", query = "SELECT t FROM TLine t WHERE t.isRoundtrip = :isRoundtrip order by t.sortNo")
+    , @NamedQuery(name = "TLine.findByFare", query = "SELECT t FROM TLine t WHERE t.fare = :fare order by t.sortNo")
+    , @NamedQuery(name = "TLine.findByMemo", query = "SELECT t FROM TLine t WHERE t.memo = :memo order by t.sortNo")})
 public class TLine implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -220,6 +220,22 @@ public class TLine implements Serializable {
 
     public void setSortNo(int sortNo) {
         this.sortNo = sortNo;
+    }
+
+    public MMeans getMeans() {
+        return means;
+    }
+
+    public void setMeans(MMeans means) {
+        this.means = means;
+    }
+
+    public MOrder getOrder() {
+        return order;
+    }
+
+    public void setOrder(MOrder order) {
+        this.order = order;
     }
 
     @Override
