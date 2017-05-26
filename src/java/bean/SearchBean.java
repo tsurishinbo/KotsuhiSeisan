@@ -25,8 +25,8 @@ public class SearchBean extends SuperBean implements Serializable {
     private Integer approveId;          //承認者ID
     private Integer status;             //ステータス
     private List<TApplication> appList; //申請一覧
-    private final Map<String, Integer> applyItems = new LinkedHashMap<>();      //申請者リスト
-    private final Map<String, Integer> approveItems = new LinkedHashMap<>();    //承認者リスト
+    private final Map<String, Integer> applyItems = new LinkedHashMap<>();  //申請者リスト
+    private final Map<String, Integer> approveItems = new LinkedHashMap<>();//承認者リスト
       
     @EJB
     private MEmployeeDb mEmployeeDb;
@@ -44,7 +44,7 @@ public class SearchBean extends SuperBean implements Serializable {
         //フラッシュから情報を取得
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         if (flash.size() == 0) {
-            //メニューから遷移：画面初期化
+            //メニューから遷移：検索条件を初期化
             dateFrom = null;
             dateTo = null;
             applyId = auth.getEmpId();
@@ -52,7 +52,7 @@ public class SearchBean extends SuperBean implements Serializable {
             status = 0;
             appList = null;
         } else {
-            //申請照会画面から遷移：画面を遷移前の状態に戻す
+            //申請照会画面から遷移：検索条件を申請照会画面遷移時に戻す
             dateFrom = (Date)flash.get("dateFrom");
             dateTo = (Date)flash.get("dateTo");
             applyId = (Integer)flash.get("applyId");
@@ -76,7 +76,7 @@ public class SearchBean extends SuperBean implements Serializable {
      * @param app
      * @return 
      */
-    public String detail(TApplication app) {
+    public String detail(Integer id) {
         //フラッシュに情報を設定
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         flash.put("dateFrom", dateFrom);    //申請日From
@@ -84,7 +84,7 @@ public class SearchBean extends SuperBean implements Serializable {
         flash.put("applyId", applyId);      //申請者ID
         flash.put("approveId", approveId);  //承認者ID
         flash.put("status", status);        //ステータス
-        flash.put("detailId", app.getId()); //照会する申請ID
+        flash.put("detailId", id); //照会する申請ID
         //申請照会画面に遷移
         return "detail.xhtml?faces-redirect=true";
     }
@@ -93,10 +93,16 @@ public class SearchBean extends SuperBean implements Serializable {
      * 申請者リストの作成
      */
     private void makeApplyItems() {
-        List<MEmployee> applyList = mEmployeeDb.findAll();
-        applyItems.put("", null);
-        for (MEmployee employee : applyList) {
-            applyItems.put(employee.getEmployeeName(), employee.getId());
+        if (auth.getManager() == 1) {
+            //管理職は全ての社員を選択可
+            List<MEmployee> applyList = mEmployeeDb.findAll();
+            applyItems.put("", null);
+            for (MEmployee employee : applyList) {
+                applyItems.put(employee.getEmployeeName(), employee.getId());
+            }
+        } else {
+            //一般職は自分のみ選択可
+            applyItems.put(auth.getEmpName(), auth.getEmpId());
         }
     }
     

@@ -24,7 +24,7 @@ table.type03 {
 }
 table.type03 th {
 	width: 80px;
-	padding: 8px;
+	padding: 5px;
 	font-weight: bold;
 	vertical-align: top;
 	color: #153d73;
@@ -35,9 +35,10 @@ table.type03 th {
 
 }
 table.type03 td {
-	width: 150px;
-	padding: 8px;
+	width: 200px;
+	padding: 5px;
 	vertical-align: top;
 	border-top: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
 }
+

@@ -30,6 +30,12 @@ public class TApplicationDb {
         return (TLine) query.getSingleResult();
     }
 
+    public List<TApplication> findUnapproved(Integer approveId) {
+        Query query = em.createNamedQuery("TApplication.findUnapproved");
+        query.setParameter("approveId", approveId);
+        return query.getResultList();
+    }
+    
     public Long getRejectCount(Integer empId) {
         Query query = em.createNamedQuery("TApplication.getRejectCount");
         query.setParameter("applyId", empId);
@@ -83,9 +89,7 @@ public class TApplicationDb {
             query.setParameter("status", status);
         }
 
-        List<TApplication> result = query.getResultList();
-        em.clear();
-        return result;
+        return query.getResultList();
     }
     
     /**

@@ -44,6 +44,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "TApplication.findByApproveId", query = "SELECT t FROM TApplication t WHERE t.approveId = :approveId")
     , @NamedQuery(name = "TApplication.findByApproveDate", query = "SELECT t FROM TApplication t WHERE t.approveDate = :approveDate")
     , @NamedQuery(name = "TApplication.findByTotalFare", query = "SELECT t FROM TApplication t WHERE t.totalFare = :totalFare")
+    , @NamedQuery(name = "TApplication.findUnapproved", query = "SELECT t FROM TApplication t WHERE t.status = 2 AND t.approveId = :approveId")
     , @NamedQuery(name = "TApplication.getRejectCount", query = "SELECT COUNT(t) FROM TApplication t WHERE t.applyId = :applyId and t.status = 4")
     , @NamedQuery(name = "TApplication.getPendingCount", query = "SELECT COUNT(t) FROM TApplication t WHERE t.approveId = :approveId and t.status = 2")})
 public class TApplication implements Serializable {

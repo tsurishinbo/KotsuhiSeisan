@@ -61,11 +61,9 @@
                         </tr>
                         <tr>
                             <th>出張場所</th>
-                            <td colspan="3"><h:outputText value="#{line.place}" /></td>
-                        </tr>
-                        <tr>
+                            <td><h:outputText value="#{line.place}" /></td>
                             <th>出張目的</th>
-                            <td colspan="3"><h:outputText value="#{line.purpose}" /></td>
+                            <td><h:outputText value="#{line.purpose}" /></td>
                         </tr>
                         <tr>
                             <th>交通手段</th>
@@ -76,17 +74,19 @@
                             <td colspan="3">
                                 <h:outputText value="#{line.sectionFrom}" />～<h:outputText value="#{line.sectionTo}" />
                                 <ui:fragment rendered="#{line.isRoundtrip==1}">（往復）</ui:fragment>
-                                <h:commandButton type="button" value="料金検索" 
-                                    onclick="callApiFromDetailPage('#{line.sectionFrom}','#{line.sectionTo}')" />
                             </td>
                         </tr>
                         <tr>
                             <th>料金</th>
-                            <td colspan="3">
+                            <td>
                                 <h:outputText value="#{line.fare}">
                                     <f:convertNumber pattern="#,##0" />
                                 </h:outputText>
                                 円
+                            </td>
+                            <td colspan="2">
+                                <h:commandButton type="button" value="料金検索" 
+                                    onclick="callApiFromDetailPage('#{line.sectionFrom}','#{line.sectionTo}')" />
                             </td>
                         </tr>
                         <tr>
@@ -97,27 +97,19 @@
                     <br/>
                     </ui:repeat>
                 <div>
-                    <h:commandButton id="btnEdit"
-                        value="編集"
+                    <h:commandButton id="btnEdit" value="編集"
                         action="#{detailBean.edit()}"
-                        disabled="#{detailBean.isDisabledEdit()}"
-                    />
-                    <h:commandButton id="btnDelete"
-                        value="削除"
+                        disabled="#{detailBean.isDisabledEdit()}" />
+                    <h:commandButton id="btnDelete" value="削除"
                         action="#{detailBean.delete()}"
                         disabled="#{detailBean.isDisabledDelete()}"
-                        onclick="return confirm('削除してもよろしいですか？')"
-                    />
-                    <h:commandButton id="btnCancel"
-                        value="申請取消"
+                        onclick="return confirm('削除してもよろしいですか？')" />
+                    <h:commandButton id="btnCancel" value="申請取消"
                         action="#{detailBean.cancel()}"
                         disabled="#{detailBean.isDisabledCancel()}"
-                        onclick="return confirm('申請を取消してもよろしいですか？')"
-                    />
-                    <h:commandButton id="btnBack"
-                        value="戻る"
-                        action="#{detailBean.back()}"
-                    />
+                        onclick="return confirm('申請を取消してもよろしいですか？')" />
+                    <h:commandButton id="btnBack" value="戻る"
+                        action="#{detailBean.back()}" />
                 </div>
             </ui:define>
         </ui:composition>

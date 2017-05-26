@@ -24,7 +24,7 @@
                     <h:link outcome="make" style="margin-right:10px;">申請作成</h:link>
                     <h:link outcome="search" style="margin-right:10px;">申請検索</h:link>
                     <ui:fragment rendered="#{indexBean.loginManager == 1}">
-                        <h:link outcome="top" style="margin-right:10px;">申請承認</h:link>
+                        <h:link outcome="unapproved" style="margin-right:10px;">申請承認</h:link>
                     </ui:fragment>
                     <h:commandLink action="#{indexBean.logout()}">ログアウト</h:commandLink> 
                 </ui:insert>
