@@ -39,9 +39,8 @@ public class DetailBean extends SuperBean implements Serializable {
         applyId = (Integer)flash.get("applyId");
         approveId = (Integer)flash.get("approveId");
         status = (Integer)flash.get("status");
-        Integer detailId = (Integer)flash.get("detailId");
         //照会する申請を取得
-        app = tApplicationDb.findApplicationById(detailId);
+        app = tApplicationDb.findApplicationById((Integer)flash.get("detailId"));
     }
   
     /**
@@ -77,7 +76,7 @@ public class DetailBean extends SuperBean implements Serializable {
         //申請取消
         app.setStatus(1);
         app.setApplyDate(null);
-        tApplicationDb.cancel(app);
+        tApplicationDb.update(app);
         //検索条件をフラッシュに設定
         setFlash();
         //申請検索画面に遷移

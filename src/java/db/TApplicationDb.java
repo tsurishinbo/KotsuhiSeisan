@@ -93,21 +93,37 @@ public class TApplicationDb {
     }
     
     /**
-     * 申請作成（新規保存・新規申請）
+     * 挿入
      * @param app
      */
-    public void make(TApplication app) {
+    public void insert(TApplication app) {
         em.persist(app);
     }
 
     /**
-     * 申請更新（更新保存・更新申請）
+     * 更新
+     * @param app 
+     */
+    public void update(TApplication app) {
+        em.merge(app);
+    }
+    
+    /**
+     * 削除
+     * @param app 
+     */
+    public void delete(TApplication app) {
+        em.remove(em.merge(app));
+    }
+    
+    /**
+     * 挿入・更新・削除
      * @param app
      * @param addLines
      * @param updLines
      * @param delLines 
      */
-    public void update(TApplication app, List<TLine> addLines, List<TLine> updLines, List<TLine> delLines) {
+    public void insertAndUpdateAndDelete(TApplication app, List<TLine> addLines, List<TLine> updLines, List<TLine> delLines) {
         for (TLine addLine : addLines) {
             em.persist(addLine);
         }
@@ -120,21 +136,5 @@ public class TApplicationDb {
         em.merge(app);
         em.flush(); //強制的にDBに反映
         em.clear(); //エンティティを破棄（これをしないとエンティティが残る）
-    }
-    
-    /**
-     * 申請削除
-     * @param app 
-     */
-    public void delete(TApplication app) {
-        em.remove(em.merge(app));
-    }
-    
-    /**
-     * 申請取消
-     * @param app 
-     */
-    public void cancel(TApplication app) {
-        em.merge(app);
     }
 }

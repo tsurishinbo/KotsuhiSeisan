@@ -124,7 +124,7 @@ public class MakeBean extends SuperBean implements Serializable {
         app.setApproveId(auth.getBossId());
         app.setTotalFare(totalFare);
         app.setLines(lines);
-        tApplicationDb.make(app);
+        tApplicationDb.insert(app);
     }
     
     /**
@@ -149,7 +149,7 @@ public class MakeBean extends SuperBean implements Serializable {
         app.setApproveId(auth.getBossId());
         app.setTotalFare(totalFare);
         app.setLines(lines);
-        tApplicationDb.make(app);
+        tApplicationDb.insert(app);
     }
    
     /**
@@ -188,7 +188,7 @@ public class MakeBean extends SuperBean implements Serializable {
             }
         }
         app.setTotalFare(totalFare);
-        tApplicationDb.update(app, addLines, updLines, delLines);
+        tApplicationDb.insertAndUpdateAndDelete(app, addLines, updLines, delLines);
     }
     
     /**
@@ -229,7 +229,7 @@ public class MakeBean extends SuperBean implements Serializable {
         app.setStatus(2);
         app.setApplyDate(new Date());
         app.setTotalFare(totalFare);
-        tApplicationDb.update(app, addLines, updLines, delLines);
+        tApplicationDb.insertAndUpdateAndDelete(app, addLines, updLines, delLines);
     }
     
     /**

@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <body>
+        <ui:composition template="./templates/template.xhtml">
+            <ui:define name="content">
+                <h3>申請承認</h3>
+                <h4>基本情報</h4>
+                <table class="type03">
+                    <tr>
+                        <th>申請ID</th>
+                        <td><h:outputText value="#{approveBean.app.id}" /></td>
+                        <th>ステータス</th>
+                        <td>承認待ち</td>
+                    </tr>
+                    <tr>
+                        <th>申請者</th>
+                        <td><h:outputText value="#{approveBean.app.applyEmployee.employeeName}" /></td>
+                        <th>申請日</th>
+                        <td>
+                            <h:outputText value="#{approveBean.app.applyDate}">
+                                <f:convertDateTime pattern="yyyy/MM/dd" locale="ja" timeZone="JST" />
+                            </h:outputText>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <h4>明細情報</h4>
+                <ui:repeat value="#{approveBean.app.lines}" var="line" varStatus="stat">
+                    <h:outputText value="#{stat.index+1}" />件目
+                    <table class="type03">
+                        <tr>
+                            <th>利用日</th>
+                            <td>
+                                <h:outputText value="#{line.usedDate}">
+                                    <f:convertDateTime pattern="yyyy/MM/dd" locale="ja" timeZone="JST" />
+                                </h:outputText>
+                            </td>
+                            <th>作業コード</th>
+                            <td><h:outputText value="#{line.order.id}" />:<h:outputText value="#{line.order.orderName}" /></td>
+                        </tr>
+                        <tr>
+                            <th>出張場所</th>
+                            <td><h:outputText value="#{line.place}" /></td>
+                            <th>出張目的</th>
+                            <td><h:outputText value="#{line.purpose}" /></td>
+                        </tr>
+                        <tr>
+                            <th>交通手段</th>
+                            <td colspan="3"><h:outputText value="#{line.means.means}" /></td>
+                        </tr>
+                        <tr>
+                            <th>区間</th>
+                            <td colspan="3">
+                                <h:outputText value="#{line.sectionFrom}" />～<h:outputText value="#{line.sectionTo}" />
+                                <ui:fragment rendered="#{line.isRoundtrip==1}">（往復）</ui:fragment>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>料金</th>
+                            <td>
+                                <h:outputText value="#{line.fare}">
+                                    <f:convertNumber pattern="#,##0" />
+                                </h:outputText>
+                                円
+                            </td>
+                            <td colspan="2">
+                                <h:commandButton type="button" value="料金検索" 
+                                    onclick="callApiFromDetailPage('#{line.sectionFrom}','#{line.sectionTo}')" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>備考</th>
+                            <td colspan="3"><h:outputText value="#{line.memo}" /></td>
+                        </tr>
+                    </table>
+                    <br/>
+                    </ui:repeat>
+                <div>
+                    <h:commandButton id="btnApprove" value="承認"
+                        action="#{approveBean.approve()}"
+                        onclick="return confirm('承認してもよろしいですか？')" />
+                    <h:commandButton id="btnReject" value="差戻し"
+                        action="#{approveBean.reject()}"
+                        onclick="return confirm('差戻してもよろしいですか？')" />
+                    <h:commandButton id="btnBack" value="戻る"
+                        action="#{approveBean.back()}" />
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
+
