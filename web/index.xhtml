@@ -9,6 +9,9 @@
             <ui:define name="left" />
             <ui:define name="content">
                 <h3>ログイン</h3>
+                <div class="attention">
+                    <h:outputText value="#{indexBean.message}" />
+                </div>
                 <h:panelGrid columns="2">
                     社員番号:
                     <h:inputText value="#{indexBean.empNo}" />

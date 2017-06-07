@@ -5,15 +5,18 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import db.*;
 import entity.*;
+import java.io.Serializable;
+import javax.faces.view.ViewScoped;
 import util.*;
 
 @Named
-@RequestScoped
-public class IndexBean extends SuperBean {
+@ViewScoped
+public class IndexBean extends SuperBean implements Serializable {
     
     private Integer empNo;      //社員番号
     private String password;    //パスワード
-
+    private String message;     //メッセージ
+    
     @EJB
     private MEmployeeDb mEmployeeDb;
     
@@ -34,6 +37,7 @@ public class IndexBean extends SuperBean {
             //トップ画面に遷移
             return "top.xhtml?faces-redirect=true";
         } else {
+            message = "社員番号またはパスワードが違います。";
             return null;
         }
     }
@@ -68,5 +72,13 @@ public class IndexBean extends SuperBean {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * メッセージの取得
+     * @return 
+     */
+    public String getMessage() {
+        return message;
     }
 }

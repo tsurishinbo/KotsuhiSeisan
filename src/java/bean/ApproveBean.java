@@ -72,4 +72,12 @@ public class ApproveBean extends SuperBean implements Serializable {
         //未承認一覧画面に遷移
         return "unapproved.xhtml?faces-redirect=true";
     }
+
+    /**
+     * 承認する申請の取得
+     * @return 
+     */
+    public TApplication getApp() {
+        return app;
+    }
 }

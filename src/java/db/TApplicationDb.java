@@ -21,19 +21,27 @@ public class TApplicationDb {
     public TApplication findApplicationById(Integer id) {
         Query query = em.createNamedQuery("TApplication.findById");
         query.setParameter("id", id);
-        return (TApplication) query.getSingleResult();
+        TApplication app = (TApplication) query.getSingleResult();
+        em.refresh(app);
+        return app;
     }
 
     public TLine findLineById(Integer id) {
         Query query = em.createNamedQuery("TLine.findById");
         query.setParameter("id", id);
-        return (TLine) query.getSingleResult();
+        TLine line = (TLine) query.getSingleResult();
+        em.refresh(line);
+        return line;
     }
 
     public List<TApplication> findUnapproved(Integer approveId) {
         Query query = em.createNamedQuery("TApplication.findUnapproved");
         query.setParameter("approveId", approveId);
-        return query.getResultList();
+        List<TApplication> appList = query.getResultList();
+        for (TApplication app : appList) {
+            em.refresh(app);
+        }
+        return appList;
     }
     
     public Long getRejectCount(Integer empId) {
@@ -89,7 +97,11 @@ public class TApplicationDb {
             query.setParameter("status", status);
         }
 
-        return query.getResultList();
+        List<TApplication> appList = query.getResultList();
+        for (TApplication app : appList) {
+            em.refresh(app);
+        }
+        return appList;
     }
     
     /**
@@ -98,6 +110,8 @@ public class TApplicationDb {
      */
     public void insert(TApplication app) {
         em.persist(app);
+        em.flush();
+        em.clear();
     }
 
     /**
@@ -106,6 +120,8 @@ public class TApplicationDb {
      */
     public void update(TApplication app) {
         em.merge(app);
+        em.flush();
+        em.clear();
     }
     
     /**
@@ -114,6 +130,8 @@ public class TApplicationDb {
      */
     public void delete(TApplication app) {
         em.remove(em.merge(app));
+        em.flush();
+        em.clear();
     }
     
     /**
@@ -134,7 +152,7 @@ public class TApplicationDb {
             em.remove(em.merge(delLine));
         }
         em.merge(app);
-        em.flush(); //強制的にDBに反映
-        em.clear(); //エンティティを破棄（これをしないとエンティティが残る）
+        em.flush();
+        em.clear();
     }
 }
