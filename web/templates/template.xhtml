@@ -26,7 +26,7 @@
                     <ui:fragment rendered="#{indexBean.loginManager == 1}">
                         <h:link outcome="unapproved" style="margin-right:10px;">申請承認</h:link>
                     </ui:fragment>
-                    <h:commandLink action="#{indexBean.logout()}">ログアウト</h:commandLink> 
+                    <h:commandLink action="#{indexBean.logout()}" immediate="true">ログアウト</h:commandLink> 
                 </ui:insert>
             </div>
             <div id="content">
