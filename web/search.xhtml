@@ -4,47 +4,61 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <body>
         <ui:composition template="./templates/template.xhtml">
             <ui:define name="content">
                 <h3>申請検索</h3>
-                <div>
-                    申請日：
-                    <h:inputText id="date_from" value="#{searchBean.dateFrom}"
-                        converterMessage="申請日(From)をyyyy/mm/ddの形式で入力してください。">
-                        <f:convertDateTime pattern="yyyy/MM/dd" locale="ja" timeZone="JST" />
-                    </h:inputText>
-                    ～
-                    <h:inputText id="date_to" value="#{searchBean.dateTo}"
-                        converterMessage="申請日(To)をyyyy/mm/ddの形式で入力してください。">
-                        <f:convertDateTime pattern="yyyy/MM/dd" locale="ja" timeZone="JST" />
-                    </h:inputText>
-                    <br/>
-                    申請者：
-                    <h:selectOneMenu id="apply_id" value="#{searchBean.applyId}">
-                        <f:selectItems value="#{searchBean.applyItems}" />
-                    </h:selectOneMenu>
-                    <br/>
-                    承認者：
-                    <h:selectOneMenu id="approve_id" value="#{searchBean.approveId}">
-                        <f:selectItems value="#{searchBean.approveItems}" />
-                    </h:selectOneMenu>
-                    <br/>
-                    ステータス：
-                    <h:selectOneRadio id="status" value="#{searchBean.status}">
-                        <f:selectItem itemValue="0" itemLabel="すべて" />
-                        <f:selectItem itemValue="1" itemLabel="未申請" />
-                        <f:selectItem itemValue="2" itemLabel="承認待ち" />
-                        <f:selectItem itemValue="3" itemLabel="承認済" />
-                        <f:selectItem itemValue="4" itemLabel="差戻し" />
-                    </h:selectOneRadio>
-                    <br/>
-                </div>
+                <table class="make">
+                    <tr>
+                        <th>申請日</th>
+                        <td>
+                            <h:inputText id="date_from" value="#{searchBean.dateFrom}"
+                                converterMessage="申請日(From)をyyyy/mm/ddの形式で入力してください。">
+                                <f:convertDateTime pattern="yyyy/MM/dd" locale="ja" timeZone="JST" />
+                            </h:inputText>
+                            ～
+                            <h:inputText id="date_to" value="#{searchBean.dateTo}"
+                                converterMessage="申請日(To)をyyyy/mm/ddの形式で入力してください。">
+                                <f:convertDateTime pattern="yyyy/MM/dd" locale="ja" timeZone="JST" />
+                            </h:inputText>
+                            <span class="attention">* YYYY/MM/DDの形式で入力してください</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>申請者</th>
+                        <td>
+                            <h:selectOneMenu id="apply_id" value="#{searchBean.applyId}">
+                                <f:selectItems value="#{searchBean.applyItems}" />
+                            </h:selectOneMenu>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>承認者</th>
+                        <td>
+                            <h:selectOneMenu id="approve_id" value="#{searchBean.approveId}">
+                                <f:selectItems value="#{searchBean.approveItems}" />
+                            </h:selectOneMenu>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>状態</th>
+                        <td>
+                            <h:selectOneRadio id="status" value="#{searchBean.status}">
+                                <f:selectItem itemValue="0" itemLabel="すべて" />
+                                <f:selectItem itemValue="1" itemLabel="未申請" />
+                                <f:selectItem itemValue="2" itemLabel="承認待ち" />
+                                <f:selectItem itemValue="3" itemLabel="承認済" />
+                                <f:selectItem itemValue="4" itemLabel="差戻し" />
+                            </h:selectOneRadio>
+                        </td>
+                    </tr>
+                </table>
                 <h:commandButton action="#{searchBean.search()}" value="検索" />
                 <ui:fragment rendered="#{searchBean.appList != null}">
                     <hr/>
-                    <p:dataTable id="appList" var="app" value="#{searchBean.appList}" style="width:80%">
+                    <p:dataTable id="appList" var="app" value="#{searchBean.appList}" style="width:90%">
                         <!-- 申請ID -->
                         <p:column id="colId" headerText="申請ID" width="5%">
                             <div style="text-align:center">
