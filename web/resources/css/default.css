@@ -1,7 +1,7 @@
+/* 全体共通 */
 html {
     height: 100%;
 }
-
 body {
     height: 100%;
     background-color: #ffffff;
@@ -11,6 +11,33 @@ body {
     margin: 10px;
 }
 
+/* ヘッダ部 */
+#header {
+    height: 70px;
+    /*position: relative;*/
+    background-color: #036fab;
+    color: #ffffff;
+    padding: 5px;
+    /*margin: 0px 0px 10px 0px;*/
+}
+
+/* メニュー部 */
+#menu {
+    height: 20px;
+    background-color: #ece3a5;
+    padding: 5px;
+    /*width: 150px;*/
+}
+
+/* コンテンツ部 */
+#content {
+    /*height: 100%;*/
+    /*background-color: #dddddd;*/
+    padding: 5px;
+    /*margin-left: 170px;*/
+}
+
+/* 機能名(タイトル) */
 h3 {
     border-top: #4169e1 1px solid;
     border-bottom: #4169e1 1px solid;
@@ -19,13 +46,42 @@ h3 {
     color: #153d73;
 }
 
-table.type03 {
+/* 入力項目 */
+table.input {
+    border-collapse: separate;
+    border-spacing: 2px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+table.input th {
+    width: 80px;
+    padding: 2px 2px 2px 4px;
+    text-align: left;
+    color: #ffffff;
+    background-color: #153d73;
+    border-left: #ff9933 3px solid;
+}
+table.input td {
+    padding: 2px;
+    text-align: left;
+}
+
+/* 申請照会のタイトル */
+div.info {
+    color: #ffffff;
+    background-color: #369;
+    margin-bottom: 10px;
+    padding: 2px;
+}
+
+/* 照会項目 */
+table.ref {
     border-collapse: collapse;
     text-align: left;
     line-height: 1.5;
     border-right: 1px solid #c0c0c0;
 }
-table.type03 th {
+table.ref th {
     width: 80px;
     padding: 5px;
     font-weight: bold;
@@ -37,7 +93,7 @@ table.type03 th {
     border-right: 1px solid #c0c0c0;
 
 }
-table.type03 td {
+table.ref td {
     width: 200px;
     padding: 5px;
     vertical-align: top;
@@ -45,37 +101,20 @@ table.type03 td {
     border-bottom: 1px solid #c0c0c0;
 }
 
+
+/* エラー表示 */
 .attention {
     color: #ff0000;
     font-size: 10px;
 }
 
-table.make {
-    border-collapse: separate;
-    border-spacing: 2px;
-    margin-left: 10px;
-    margin-bottom: 10px;
-}
-table.make th {
-    width: 80px;
-    padding: 2px 2px 2px 4px;
-    text-align: left;
-    color: #ffffff;
-    background-color: #153d73;
-    border-left: #ff9933 3px solid;
-}
-table.make td {
-    padding: 2px;
-    text-align: left;
-}
-
-div.info {
-    color: #ffffff;
-    background-color: #369;
-    margin-bottom: 10px;
-    padding: 2px;
-}
-
+/* 申請作成 */
 .repeated-form .ui-datalist-content.ui-widget-content {
     border: none;
+}
+
+/* 申請検索の一覧 */
+.ui-datatable th {
+    background: #153d73;
+    color: #ffffff;
 }

@@ -10,16 +10,16 @@
         <ui:composition template="./templates/template.xhtml">
             <ui:define name="content">
                 <h3>申請検索</h3>
-                <table class="make">
+                <table class="input">
                     <tr>
                         <th>申請日</th>
                         <td>
-                            <h:inputText id="date_from" value="#{searchBean.dateFrom}"
+                            <h:inputText id="date_from" class="datepicker" style="width:80px" value="#{searchBean.dateFrom}"
                                 converterMessage="申請日(From)をyyyy/mm/ddの形式で入力してください。">
                                 <f:convertDateTime pattern="yyyy/MM/dd" locale="ja" timeZone="JST" />
                             </h:inputText>
                             ～
-                            <h:inputText id="date_to" value="#{searchBean.dateTo}"
+                            <h:inputText id="date_to" class="datepicker" style="width:80px" value="#{searchBean.dateTo}"
                                 converterMessage="申請日(To)をyyyy/mm/ddの形式で入力してください。">
                                 <f:convertDateTime pattern="yyyy/MM/dd" locale="ja" timeZone="JST" />
                             </h:inputText>
@@ -29,7 +29,7 @@
                     <tr>
                         <th>申請者</th>
                         <td>
-                            <h:selectOneMenu id="apply_id" value="#{searchBean.applyId}">
+                            <h:selectOneMenu id="apply_id" style="width:150px" value="#{searchBean.applyId}">
                                 <f:selectItems value="#{searchBean.applyItems}" />
                             </h:selectOneMenu>
                         </td>
@@ -37,7 +37,7 @@
                     <tr>
                         <th>承認者</th>
                         <td>
-                            <h:selectOneMenu id="approve_id" value="#{searchBean.approveId}">
+                            <h:selectOneMenu id="approve_id" style="width:150px" value="#{searchBean.approveId}">
                                 <f:selectItems value="#{searchBean.approveItems}" />
                             </h:selectOneMenu>
                         </td>

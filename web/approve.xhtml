@@ -11,7 +11,7 @@
             <ui:define name="content">
                 <h3>申請承認</h3>
                 <h4>基本情報</h4>
-                <table class="type03">
+                <table class="ref">
                     <tr>
                         <th>申請ID</th>
                         <td><h:outputText value="#{approveBean.app.id}" /></td>
@@ -33,7 +33,7 @@
                 <h4>明細情報</h4>
                 <ui:repeat value="#{approveBean.app.lines}" var="line" varStatus="stat">
                     <h:outputText value="#{stat.index+1}" />件目
-                    <table class="type03">
+                    <table class="ref">
                         <tr>
                             <th>利用日</th>
                             <td>

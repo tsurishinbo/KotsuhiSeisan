@@ -11,7 +11,7 @@
             <ui:define name="content">
                 <h3>申請詳細</h3>
                 <div class="info">基本情報</div>
-                <table class="type03">
+                <table class="ref">
                     <tr>
                         <th>申請ID</th>
                         <td><h:outputText value="#{detailBean.app.id}" /></td>
@@ -48,7 +48,7 @@
                 <div class="info">明細情報</div>
                 <ui:repeat value="#{detailBean.app.lines}" var="line" varStatus="stat">
                     <img src="images/pin.png" /><h:outputText value="#{stat.index+1}" />件目
-                    <table class="type03">
+                    <table class="ref">
                         <tr>
                             <th>利用日</th>
                             <td>
