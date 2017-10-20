@@ -1,4 +1,4 @@
-package db;
+package dao;
 
 import java.util.Date;
 import java.util.List;
@@ -9,10 +9,10 @@ import javax.persistence.Query;
 import entity.*;
 
 /**
- * 申請ビジネスロジッククラス
+ * 申請DAO
  */
 @Stateless
-public class TApplicationDb {
+public class TApplicationDao {
 
     @PersistenceContext
     private EntityManager em;
@@ -20,7 +20,7 @@ public class TApplicationDb {
     /**
      * コンストラクタ
      */
-    public TApplicationDb() { }
+    public TApplicationDao() { }
     
     /**
      * 申請を取得する

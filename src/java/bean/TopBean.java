@@ -1,10 +1,10 @@
 package bean;
 
+import dao.TApplicationDao;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
-import db.*;
 import util.*;
 
 /**
@@ -18,7 +18,7 @@ public class TopBean extends SuperBean {
     private Long pendingCount;  // 承認待ち申請件数
     
     @EJB
-    private TApplicationDb tApplicationDb;
+    private TApplicationDao tApplicationDao;
 
     /**
      * 初期処理
@@ -26,9 +26,9 @@ public class TopBean extends SuperBean {
     @PostConstruct
     public void init() {
         // 差戻し申請件数の取得
-        rejectCount = tApplicationDb.getRejectCount(auth.getEmpId());
+        rejectCount = tApplicationDao.getRejectCount(auth.getEmpId());
         // 承認待ち申請件数の取得
-        pendingCount = tApplicationDb.getPendingCount(auth.getEmpId());
+        pendingCount = tApplicationDao.getPendingCount(auth.getEmpId());
     }
 
     public Long getRejectCount() {

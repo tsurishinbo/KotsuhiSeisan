@@ -1,4 +1,4 @@
-package db;
+package dao;
 
 import javax.ejb.Stateless;
 import entity.*;
@@ -8,10 +8,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
- * 作業ビジネスロジッククラス
+ * 作業マスタDAO
  */
 @Stateless
-public class MOrderDb {
+public class MOrderDao {
 
     @PersistenceContext
     private EntityManager em;
@@ -19,7 +19,7 @@ public class MOrderDb {
     /**
      * コンストラクタ
      */
-    public MOrderDb() { }
+    public MOrderDao() { }
     
     /**
      * 全ての作業を取得する

@@ -1,5 +1,7 @@
 package bean;
 
+import dao.TApplicationDao;
+import dao.MEmployeeDao;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -11,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
-import db.*;
 import entity.*;
 import util.*;
 
@@ -27,9 +28,9 @@ public class UnapprovedBean extends SuperBean implements Serializable {
     private final Map<String, Integer> approveItems = new LinkedHashMap<>();// 承認者リスト
 
     @EJB
-    private MEmployeeDb mEmployeeDb;
+    private MEmployeeDao mEmployeeDao;
     @EJB
-    private TApplicationDb tApplicationDb;
+    private TApplicationDao tApplicationDao;
 
     /**
      * 初期処理
@@ -80,14 +81,14 @@ public class UnapprovedBean extends SuperBean implements Serializable {
      * 承認者リストを作成する
      */
     private void makeApproveItems() {
-        List<MEmployee> approveList = mEmployeeDb.findAllManager();
+        List<MEmployee> approveList = mEmployeeDao.findAllManager();
         for (MEmployee employee : approveList) {
             approveItems.put(employee.getEmployeeName(), employee.getId());
         }
     }
     
     private void getUnapprovedList() {
-        appList = tApplicationDb.findUnapproved(approveId);
+        appList = tApplicationDao.findUnapproved(approveId);
     }
 
     public Integer getApproveId() {

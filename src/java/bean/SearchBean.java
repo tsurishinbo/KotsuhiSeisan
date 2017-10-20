@@ -1,5 +1,7 @@
 package bean;
 
+import dao.TApplicationDao;
+import dao.MEmployeeDao;
 import java.util.Date;
 import java.util.Map;
 import javax.inject.Named;
@@ -11,7 +13,6 @@ import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
-import db.*;
 import entity.*;
 import util.*;
 
@@ -32,9 +33,9 @@ public class SearchBean extends SuperBean implements Serializable {
     private final Map<String, Integer> approveItems = new LinkedHashMap<>();// 承認者リスト
       
     @EJB
-    private MEmployeeDb mEmployeeDb;
+    private MEmployeeDao mEmployeeDao;
     @EJB
-    private TApplicationDb tApplicationDb;
+    private TApplicationDao tApplicationDao;
 
     /**
      * 初期処理
@@ -61,7 +62,7 @@ public class SearchBean extends SuperBean implements Serializable {
             applyId = (Integer)flash.get("applyId");
             approveId = (Integer)flash.get("approveId");
             status = (Integer)flash.get("status");
-            appList = tApplicationDb.getSearchResult(dateFrom, dateTo, applyId, approveId, status);
+            appList = tApplicationDao.getSearchResult(dateFrom, dateTo, applyId, approveId, status);
         }
     }
     
@@ -70,7 +71,7 @@ public class SearchBean extends SuperBean implements Serializable {
      * @return 次画面のURL
      */
     public String search() {
-        appList = tApplicationDb.getSearchResult(dateFrom, dateTo, applyId, approveId, status);
+        appList = tApplicationDao.getSearchResult(dateFrom, dateTo, applyId, approveId, status);
         return null;
     }
     
@@ -98,7 +99,7 @@ public class SearchBean extends SuperBean implements Serializable {
     private void makeApplyItems() {
         if (auth.getManager() == 1) {
             // 管理職は全ての社員を選択可
-            List<MEmployee> applyList = mEmployeeDb.findAll();
+            List<MEmployee> applyList = mEmployeeDao.findAll();
             applyItems.put("", null);
             for (MEmployee employee : applyList) {
                 applyItems.put(employee.getEmployeeName(), employee.getId());
@@ -113,7 +114,7 @@ public class SearchBean extends SuperBean implements Serializable {
      * 承認者リストを作成する
      */
     private void makeApproveItems() {
-        List<MEmployee> approveList = mEmployeeDb.findAllManager();
+        List<MEmployee> approveList = mEmployeeDao.findAllManager();
         approveItems.put("", null);
         for (MEmployee employee : approveList) {
             approveItems.put(employee.getEmployeeName(), employee.getId());

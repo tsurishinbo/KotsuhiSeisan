@@ -1,5 +1,6 @@
 package bean;
 
+import dao.TApplicationDao;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.Date;
@@ -8,7 +9,6 @@ import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
-import db.*;
 import entity.*;
 import util.*;
 
@@ -27,7 +27,7 @@ public class DetailBean extends SuperBean implements Serializable {
     private TApplication app;   // 照会する申請
     
     @EJB
-    private TApplicationDb tApplicationDb;
+    private TApplicationDao tApplicationDao;
 
     /**
      * 初期処理
@@ -42,7 +42,7 @@ public class DetailBean extends SuperBean implements Serializable {
         approveId = (Integer)flash.get("approveId");
         status = (Integer)flash.get("status");
         // 照会する申請を取得
-        app = tApplicationDb.findApplicationById((Integer)flash.get("detailId"));
+        app = tApplicationDao.findApplicationById((Integer)flash.get("detailId"));
     }
   
     /**
@@ -63,7 +63,7 @@ public class DetailBean extends SuperBean implements Serializable {
      */
     public String delete() {
         // 申請削除
-        tApplicationDb.delete(app);
+        tApplicationDao.delete(app);
         // 検索条件をフラッシュに設定
         setFlash();
         // 申請検索画面に遷移
@@ -78,7 +78,7 @@ public class DetailBean extends SuperBean implements Serializable {
         // 申請取消
         app.setStatus(1);
         app.setApplyDate(null);
-        tApplicationDb.update(app);
+        tApplicationDao.update(app);
         // 検索条件をフラッシュに設定
         setFlash();
         // 申請検索画面に遷移

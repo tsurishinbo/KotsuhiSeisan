@@ -1,4 +1,4 @@
-package db;
+package dao;
 
 import javax.ejb.Stateless;
 import entity.*;
@@ -8,10 +8,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
- * 交通手段ビジネスロジッククラス
+ * 交通手段マスタDAO
  */
 @Stateless
-public class MMeansDb {
+public class MMeansDao {
 
     @PersistenceContext
     private EntityManager em;
@@ -19,7 +19,7 @@ public class MMeansDb {
     /**
      * コンストラクタ
      */
-    public MMeansDb() { }
+    public MMeansDao() { }
     
     /**
      * 全ての交通手段を取得する

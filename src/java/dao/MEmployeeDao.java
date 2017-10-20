@@ -1,4 +1,4 @@
-package db;
+package dao;
 
 import javax.ejb.Stateless;
 import entity.*;
@@ -8,10 +8,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 /**
- * 社員ビジネスロジッククラス
+ * 社員マスタDAO
  */
 @Stateless
-public class MEmployeeDb {
+public class MEmployeeDao {
 
     @PersistenceContext
     private EntityManager em;
@@ -19,7 +19,7 @@ public class MEmployeeDb {
     /**
      * コンストラクタ
      */
-    public MEmployeeDb() { }
+    public MEmployeeDao() { }
 
     /**
      * 社員を取得する

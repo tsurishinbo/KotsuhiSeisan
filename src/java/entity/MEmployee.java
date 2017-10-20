@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * 社員エンティティクラス
+ * 社員マスタエンティティクラス
  */
 @Entity
 @Table(name = "m_employee")

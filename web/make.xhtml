@@ -95,12 +95,12 @@
                                 </tr>
                             </table>
                             <h:commandButton type="button" value="料金検索" onclick="callApiFromMakePage(#{stat.index})"/>
-                            <h:commandButton type="submit" value="削除" action="#{makeBean.removeEntry(entry)}" immediate="true" />
+                            <h:commandButton type="submit" value="削除" action="#{makeBean.removeLine(entry)}" immediate="true" />
                             <hr/>
                         </ui:fragment>
                     </div>
                 </p:dataList>
-                <h:commandButton type="submit" value="追加" action="#{makeBean.addEntry()}" immediate="true" />
+                <h:commandButton type="submit" value="追加" action="#{makeBean.addLine()}" immediate="true" />
                 <h:commandButton type="submit" value="保存" action="#{makeBean.save()}" onclick="return confirm('保存してよろしいですか？')" />
                 <h:commandButton type="submit" value="申請" action="#{makeBean.apply()}" onclick="return confirm('申請してよろしいですか？')" />
                 <h:messages />

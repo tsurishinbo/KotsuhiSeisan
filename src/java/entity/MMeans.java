@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * 交通手段エンティティクラス
+ * 交通手段マスタエンティティクラス
  */
 @Entity
 @Table(name = "m_means")

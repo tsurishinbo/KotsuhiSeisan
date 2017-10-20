@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
-import db.*;
+import dao.*;
 import entity.*;
 import util.*;
 
@@ -29,11 +29,11 @@ public class MakeBean extends SuperBean implements Serializable {
     private Integer editId = null;  // 編集申請ID                
     
     @EJB
-    private MMeansDb mMeansDb;
+    private MMeansDao mMeansDao;
     @EJB
-    private MOrderDb mOrderDb;
+    private MOrderDao mOrderDao;
     @EJB
-    private TApplicationDb tApplicationDb;
+    private TApplicationDao tApplicationDao;
     
     /**
      * 初期処理
@@ -127,7 +127,7 @@ public class MakeBean extends SuperBean implements Serializable {
         app.setApproveId(auth.getBossId());
         app.setTotalFare(totalFare);
         app.setLines(lines);
-        tApplicationDb.insert(app);
+        tApplicationDao.insert(app);
     }
     
     /**
@@ -152,7 +152,7 @@ public class MakeBean extends SuperBean implements Serializable {
         app.setApproveId(auth.getBossId());
         app.setTotalFare(totalFare);
         app.setLines(lines);
-        tApplicationDb.insert(app);
+        tApplicationDao.insert(app);
     }
    
     /**
@@ -163,7 +163,7 @@ public class MakeBean extends SuperBean implements Serializable {
         List<TLine> updLines = new ArrayList<>();
         List<TLine> delLines = new ArrayList<>(); 
         
-        TApplication app = tApplicationDb.findApplicationById(editId);
+        TApplication app = tApplicationDao.findApplicationById(editId);
         int sortNo = 1;
         Long totalFare = 0L;
         for (Entry entry : entries) {
@@ -178,7 +178,7 @@ public class MakeBean extends SuperBean implements Serializable {
             }
             if (entry.getId() != null && !entry.isDeleted()) {
                 //更新
-                TLine updLine = tApplicationDb.findLineById(entry.getId());
+                TLine updLine = tApplicationDao.findLineById(entry.getId());
                 setLine(updLine, entry, sortNo);
                 updLines.add(updLine);
                 totalFare += updLine.getFare();
@@ -186,12 +186,12 @@ public class MakeBean extends SuperBean implements Serializable {
             }
             if (entry.getId() != null && entry.isDeleted()) {
                 //削除
-                TLine delLine = tApplicationDb.findLineById(entry.getId());
+                TLine delLine = tApplicationDao.findLineById(entry.getId());
                 delLines.add(delLine);
             }
         }
         app.setTotalFare(totalFare);
-        tApplicationDb.insertAndUpdateAndDelete(app, addLines, updLines, delLines);
+        tApplicationDao.insertAndUpdateAndDelete(app, addLines, updLines, delLines);
     }
     
     /**
@@ -202,7 +202,7 @@ public class MakeBean extends SuperBean implements Serializable {
         List<TLine> updLines = new ArrayList<>();
         List<TLine> delLines = new ArrayList<>(); 
         
-        TApplication app = tApplicationDb.findApplicationById(editId);
+        TApplication app = tApplicationDao.findApplicationById(editId);
         int sortNo = 1;
         Long totalFare = 0L;
         for (Entry entry : entries) {
@@ -217,7 +217,7 @@ public class MakeBean extends SuperBean implements Serializable {
             }
             if (entry.getId() != null && !entry.isDeleted()) {
                 //更新
-                TLine updLine = tApplicationDb.findLineById(entry.getId());
+                TLine updLine = tApplicationDao.findLineById(entry.getId());
                 setLine(updLine, entry, sortNo);
                 updLines.add(updLine);
                 totalFare += updLine.getFare();
@@ -225,14 +225,14 @@ public class MakeBean extends SuperBean implements Serializable {
             }
             if (entry.getId() != null && entry.isDeleted()) {
                 //削除
-                TLine delLine = tApplicationDb.findLineById(entry.getId());
+                TLine delLine = tApplicationDao.findLineById(entry.getId());
                 delLines.add(delLine);
             }
         }
         app.setStatus(2);
         app.setApplyDate(new Date());
         app.setTotalFare(totalFare);
-        tApplicationDb.insertAndUpdateAndDelete(app, addLines, updLines, delLines);
+        tApplicationDao.insertAndUpdateAndDelete(app, addLines, updLines, delLines);
     }
     
     /**
@@ -263,7 +263,7 @@ public class MakeBean extends SuperBean implements Serializable {
      * @param id 申請ID
      */
     private void edit(Integer id) {
-        TApplication app = tApplicationDb.findApplicationById(id);
+        TApplication app = tApplicationDao.findApplicationById(id);
         for (TLine line : app.getLines()) {
             Entry entry = new Entry();
             entry.setId(line.getId());
@@ -285,7 +285,7 @@ public class MakeBean extends SuperBean implements Serializable {
      * 交通手段リストを作成する
      */
     private void makeMeansItems() {
-        List<MMeans> meansList = mMeansDb.findAll();
+        List<MMeans> meansList = mMeansDao.findAll();
         for (MMeans means : meansList) {
             meansItems.put(means.getMeans(), means.getId());
         }
@@ -295,7 +295,7 @@ public class MakeBean extends SuperBean implements Serializable {
      * 作業コードリストを作成する
      */
     private void makeOrderItems() {
-        List<MOrder> orderList = mOrderDb.findAll();
+        List<MOrder> orderList = mOrderDao.findAll();
         for (MOrder order : orderList) {
             orderItems.put(order.getId() + ":" + order.getOrderName(), order.getId());
         }

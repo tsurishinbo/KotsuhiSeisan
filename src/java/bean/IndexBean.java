@@ -1,8 +1,8 @@
 package bean;
 
+import dao.MEmployeeDao;
 import javax.ejb.EJB;
 import javax.inject.Named;
-import db.*;
 import entity.*;
 import java.io.Serializable;
 import javax.faces.view.ViewScoped;
@@ -20,14 +20,14 @@ public class IndexBean extends SuperBean implements Serializable {
     private String message;     // メッセージ
     
     @EJB
-    private MEmployeeDb mEmployeeDb;
+    private MEmployeeDao mEmployeeDao;
     
     /**
      * ログイン処理
      * @return 次画面のURL
      */
     public String login() {
-        MEmployee employee = mEmployeeDb.getEmployee(empNo, password);
+        MEmployee employee = mEmployeeDao.getEmployee(empNo, password);
         if (employee != null) {
             // 認証OK
             auth.login(

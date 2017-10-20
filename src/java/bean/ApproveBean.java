@@ -1,5 +1,6 @@
 package bean;
 
+import dao.TApplicationDao;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -7,7 +8,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
-import db.*;
 import entity.*;
 import java.util.Date;
 import util.*;
@@ -23,7 +23,7 @@ public class ApproveBean extends SuperBean implements Serializable {
     private TApplication app;   // 承認する申請
     
     @EJB
-    private TApplicationDb tApplicationDb;
+    private TApplicationDao tApplicationDao;
     
     /**
      * 初期処理
@@ -34,7 +34,7 @@ public class ApproveBean extends SuperBean implements Serializable {
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         approveId = (Integer)flash.get("approveId");
         // 承認する申請を取得
-        app = tApplicationDb.findApplicationById((Integer)flash.get("detailId"));
+        app = tApplicationDao.findApplicationById((Integer)flash.get("detailId"));
     }
     
     /**
@@ -46,7 +46,7 @@ public class ApproveBean extends SuperBean implements Serializable {
         app.setStatus(3);
         app.setApproveId(auth.getEmpId());
         app.setApproveDate(new Date());
-        tApplicationDb.update(app);
+        tApplicationDao.update(app);
         // 戻る処理
         return back();
     }
@@ -59,7 +59,7 @@ public class ApproveBean extends SuperBean implements Serializable {
         // 申請差戻し
         app.setStatus(4);
         app.setApplyDate(null);
-        tApplicationDb.update(app);
+        tApplicationDao.update(app);
         // 戻る処理
         return back();
     }

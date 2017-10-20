@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * 作業エンティティクラス
+ * 作業マスタエンティティクラス
  */
 @Entity
 @Table(name = "m_order")
