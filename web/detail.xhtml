@@ -47,7 +47,7 @@
                 <br />
                 <div class="info">明細情報</div>
                 <ui:repeat value="#{detailBean.app.lines}" var="line" varStatus="stat">
-                    <img src="images/pin.png" /><h:outputText value="#{stat.index+1}" />件目
+                    <h:graphicImage library="images" name="pin.png" /><h:outputText value="#{stat.index+1}" />件目
                     <table class="ref">
                         <tr>
                             <th>利用日</th>
