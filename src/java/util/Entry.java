@@ -1,23 +1,25 @@
 package util;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 
+/**
+ * 申請情報クラス
+ */
 public class Entry implements Serializable {
 
-    private Integer id;
-    private Date usedDate;
-    private String orderId;
-    private String place;
-    private String purpose;
-    private Integer meansId;
-    private String sectionFrom;
-    private String sectionTo;
-    private Boolean isRoundTrip;
-    private Long fare;
-    private String memo;
-    private boolean deleted = false;
+    private Integer id;             // 申請ID
+    private Date usedDate;          // 利用日
+    private String orderId;         // 作業コード
+    private String place;           // 出張場所
+    private String purpose;         // 出張目的
+    private Integer meansId;        // 交通手段ID
+    private String sectionFrom;     // 出発地
+    private String sectionTo;       // 到着地
+    private Boolean isRoundTrip;    // 往復フラグ(0:片道 1:往復)
+    private Long fare;              // 料金
+    private String memo;            // 備考
+    private boolean deleted = false;// 削除フラグ(true:削除)
 
     public Integer getId() {
         return id;

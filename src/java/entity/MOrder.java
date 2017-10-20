@@ -18,8 +18,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
- * @author tsurishinbo
+ * 作業エンティティクラス
  */
 @Entity
 @Table(name = "m_order")

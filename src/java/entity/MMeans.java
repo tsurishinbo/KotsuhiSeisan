@@ -18,8 +18,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
- * @author tsurishinbo
+ * 交通手段エンティティクラス
  */
 @Entity
 @Table(name = "m_means")

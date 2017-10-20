@@ -12,12 +12,15 @@ import entity.*;
 import java.util.Date;
 import util.*;
 
+/**
+ * 申請承認画面バッキングビーン
+ */
 @Named
 @ViewScoped
 public class ApproveBean extends SuperBean implements Serializable {
     
-    private Integer approveId;  //承認者ID
-    private TApplication app;   //承認する申請
+    private Integer approveId;  // 承認者ID
+    private TApplication app;   // 承認する申請
     
     @EJB
     private TApplicationDb tApplicationDb;
@@ -27,56 +30,52 @@ public class ApproveBean extends SuperBean implements Serializable {
      */
     @PostConstruct
     public void init() {
-        //フラッシュから情報を取得
+        // フラッシュから情報を取得
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         approveId = (Integer)flash.get("approveId");
-        //照会する申請を取得
+        // 承認する申請を取得
         app = tApplicationDb.findApplicationById((Integer)flash.get("detailId"));
     }
     
     /**
      * 承認処理
-     * @return 
+     * @return 次画面のURL
      */
     public String approve() {
-        //申請承認
+        // 申請承認
         app.setStatus(3);
         app.setApproveId(auth.getEmpId());
         app.setApproveDate(new Date());
         tApplicationDb.update(app);
-        //戻る処理
+        // 戻る処理
         return back();
     }
     
     /**
      * 差戻し処理
-     * @return 
+     * @return 次画面のURL
      */
     public String reject() {
-        //申請差戻し
+        // 申請差戻し
         app.setStatus(4);
         app.setApplyDate(null);
         tApplicationDb.update(app);
-        //戻る処理
+        // 戻る処理
         return back();
     }
     
     /**
      * 戻る処理
-     * @return 
+     * @return 次画面のURL
      */
     public String back() {
-        //フラッシュに承認者IDを設定
+        // フラッシュに承認者IDを設定
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         flash.put("approveId", approveId);
-        //未承認一覧画面に遷移
+        // 未承認一覧画面に遷移
         return "unapproved.xhtml?faces-redirect=true";
     }
 
-    /**
-     * 承認する申請の取得
-     * @return 
-     */
     public TApplication getApp() {
         return app;
     }
